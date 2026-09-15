@@ -1,0 +1,164 @@
+.home__products {
+  display: grid;
+
+  grid-template-columns:
+    repeat(3, minmax(0, 1fr));
+
+  gap: 40px 24px;
+}
+
+.home__catalog {
+  width: min(1400px,
+      calc(100% - 48px));
+
+  margin: 0 auto;
+
+  display: grid;
+  grid-template-columns: 180px minmax(0, 1fr);
+
+  gap: 48px;
+}
+
+.home__main h2 {
+  margin: 0 0 24px;
+
+  font-size: 28px;
+  font-weight: 900;
+  letter-spacing: -0.04em;
+}
+
+@media (max-width: 1000px) {
+  .home__catalog {
+    grid-template-columns: 1fr;
+  }
+
+  .home__products {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 600px) {
+  .home__catalog {
+    width: calc(100% - 32px);
+    gap: 32px;
+  }
+
+  .home__products {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+}
+
+.home__loading {
+  width: min(1400px,
+      calc(100% - 48px));
+
+  margin: 0 auto 80px;
+}
+
+.home__loading-header {
+  margin-bottom: 24px;
+}
+
+.skeleton {
+  position: relative;
+
+  overflow: hidden;
+
+  background: #eeeeee;
+}
+
+.skeleton::after {
+  content: '';
+
+  position: absolute;
+  inset: 0;
+
+  transform: translateX(-100%);
+
+  background:
+    linear-gradient(90deg,
+      transparent,
+      rgba(255, 255, 255, 0.7),
+      transparent);
+
+  animation:
+    skeleton-loading 1.4s infinite;
+}
+
+.skeleton--title {
+  width: 180px;
+  height: 34px;
+}
+
+.skeleton-card {
+  min-width: 0;
+}
+
+.skeleton-card__image {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+}
+
+.skeleton-card__info {
+  padding-top: 16px;
+}
+
+.skeleton-card__name {
+  width: 65%;
+  height: 18px;
+}
+
+.skeleton-card__price {
+  width: 30%;
+  height: 16px;
+
+  margin-top: 10px;
+}
+
+@keyframes skeleton-loading {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+@media (max-width: 1000px) {
+  .home__loading {
+    width: calc(100% - 48px);
+  }
+}
+
+@media (max-width: 600px) {
+  .home__loading {
+    width: calc(100% - 32px);
+  }
+}
+
+.home__load-more {
+  display: flex;
+  justify-content: center;
+  margin-top: 56px;
+}
+
+.home__load-more button {
+  padding: 14px 28px;
+  border: 1px solid #111111;
+  background: #111111;
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  transition:
+    background 0.2s ease,
+    color 0.2s ease;
+}
+
+.home__load-more button:hover:not(:disabled) {
+  background: #ffffff;
+  color: #111111;
+}
+
+.home__load-more button:disabled {
+  opacity: 0.5;
+}

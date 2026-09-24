@@ -1,7 +1,7 @@
 import type { Category } from '../types/category'
 import type { Product } from '../types/product'
 
-const GRAPHQL_URL = 'http://localhost:3000/graphql'
+const GRAPHQL_URL = 'http://localhost:4000/graphql'
 
 export async function fetchGraphQL<T>(
   query: string,

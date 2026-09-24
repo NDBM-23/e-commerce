@@ -171,7 +171,7 @@ function Home({
             />
 
             <section className="home__main">
-              <h2>Productos</h2>
+              <h2 style={{color:'#0062ff'}}>Productos</h2>
 
               {products.length === 0 ? (
                 <p>
@@ -206,10 +206,9 @@ function Home({
             </section>
           </div>
 
-          <section>
-            <h2>Context</h2>
-
-            <p>
+          <section style={{marginLeft:'10px'}} >
+            <h2 style={{color:'#F47F26'}}>Context</h2>
+            <p style={{color:'#fdfdfd'}}>
               Explora las diferentes categorías y
               selecciona un producto para consultar
               sus detalles.
@@ -217,7 +216,6 @@ function Home({
           </section>
         </>
       )}
-
       <Footer />
     </main>
   )

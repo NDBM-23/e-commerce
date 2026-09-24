@@ -8,7 +8,7 @@ import {
 export const resolvers = {
     Query: {
         categorias: async () => {
-            const [rows] = await db.query(
+            const { rows } = await db.query(
                 'SELECT id, nombre FROM categoria',
             )
 
@@ -19,8 +19,8 @@ export const resolvers = {
             _: unknown,
             args: { id: string },
         ) => {
-            const [rows] = await db.query(
-                'SELECT id, nombre FROM categoria WHERE id = ?',
+            const { rows } = await db.query(
+                'SELECT id, nombre FROM categoria WHERE id = $1',
                 [Number(args.id)],
             )
 
@@ -54,7 +54,7 @@ export const resolvers = {
                 )
             }
 
-            const [rows] = await db.query(
+            const { rows } = await db.query(
                 `
                 SELECT
                     id,
@@ -64,9 +64,9 @@ export const resolvers = {
                     stock,
                     categoria_id
                 FROM producto
-                WHERE id > ?
+                WHERE id > $1
                 ORDER BY id ASC
-                LIMIT ?
+                LIMIT $2
                 `,
                 [cursor, limite + 1],
             )
@@ -106,7 +106,7 @@ export const resolvers = {
             _: unknown,
             args: { id: string },
         ) => {
-            const [rows] = await db.query(
+            const { rows } = await db.query(
                 `
                 SELECT
                     id,
@@ -116,7 +116,7 @@ export const resolvers = {
                     stock,
                     categoria_id
                 FROM producto
-                WHERE id = ?
+                WHERE id = $1
                 `,
                 [Number(args.id)],
             )
@@ -134,12 +134,12 @@ export const resolvers = {
         },
 
         pedidos: async () => {
-            const [rows] = await db.query(`
+            const { rows } = await db.query(`
                 SELECT
                 id,
-                DATE_FORMAT(
+                TO_CHAR(
                     fecha,
-                    '%Y-%m-%d %H:%i:%s'
+                    'YYYY-MM-DD HH24:MI:SS'
                 ) AS fecha,
                 total,
                 status,
@@ -155,19 +155,19 @@ export const resolvers = {
             _: unknown,
             args: { id: string },
         ) => {
-            const [rows] = await db.query(
+            const { rows } = await db.query(
                 `
                 SELECT
                     id,
-                    DATE_FORMAT(
+                    TO_CHAR(
                         fecha,
-                        '%Y-%m-%d %H:%i:%s'
+                        'YYYY-MM-DD HH24:MI:SS'
                     ) AS fecha,
                     total,
                     status,
                     usuario_id
                 FROM pedido
-                WHERE id = ?
+                WHERE id = $1
                 `,
                 [Number(args.id)],
             )
@@ -184,7 +184,7 @@ export const resolvers = {
         },
 
         usuarios: async () => {
-            const [rows] = await db.query(`
+            const { rows } = await db.query(`
                 SELECT
                     id,
                     nombre,
@@ -200,7 +200,7 @@ export const resolvers = {
             _: unknown,
             args: { id: string },
         ) => {
-            const [rows] = await db.query(
+            const { rows } = await db.query(
                 `
                 SELECT
                     id,
@@ -208,7 +208,7 @@ export const resolvers = {
                     email,
                     rol
                 FROM usuario
-                WHERE id = ?
+                WHERE id = $1
                 `,
                 [Number(args.id)],
             )
@@ -228,7 +228,7 @@ export const resolvers = {
         productos: async (
             categoria: { id: number },
         ) => {
-            const [rows] = await db.query(
+            const { rows } = await db.query(
                 `
                 SELECT
                     id,
@@ -238,7 +238,7 @@ export const resolvers = {
                     stock,
                     categoria_id
                 FROM producto
-                WHERE categoria_id = ?
+                WHERE categoria_id = $1
                 `,
                 [categoria.id],
             )
@@ -251,13 +251,13 @@ export const resolvers = {
         categoria: async (
             producto: { categoria_id: number },
         ) => {
-            const [rows] = await db.query(
+            const { rows } = await db.query(
                 `
                 SELECT
                     id,
                     nombre
                 FROM categoria
-                WHERE id = ?
+                WHERE id = $1
                 `,
                 [producto.categoria_id],
             )
@@ -275,19 +275,19 @@ export const resolvers = {
         pedidos: async (
             usuario: { id: number },
         ) => {
-            const [rows] = await db.query(
+            const { rows } = await db.query(
                 `
                 SELECT
                     id,
-                    DATE_FORMAT(
+                    TO_CHAR(
                         fecha,
-                        '%Y-%m-%d %H:%i:%s'
+                        'YYYY-MM-DD HH24:MI:SS'
                     ) AS fecha,
                     total,
                     status,
                     usuario_id
                 FROM pedido
-                WHERE usuario_id = ?
+                WHERE usuario_id = $1
                 ORDER BY fecha DESC
                 `,
                 [usuario.id],
@@ -301,7 +301,7 @@ export const resolvers = {
         usuario: async (
             pedido: { usuario_id: number },
         ) => {
-            const [rows] = await db.query(
+            const { rows } = await db.query(
                 `
                 SELECT
                     id,
@@ -309,7 +309,7 @@ export const resolvers = {
                     email,
                     rol
                 FROM usuario
-                WHERE id = ?
+                WHERE id = $1
                 `,
                 [pedido.usuario_id],
             )
@@ -327,7 +327,7 @@ export const resolvers = {
         detalles: async (
             pedido: { id: number },
         ) => {
-            const [rows] = await db.query(
+            const { rows } = await db.query(
                 `
                 SELECT
                     id,
@@ -336,7 +336,7 @@ export const resolvers = {
                     cantidad,
                     precio
                 FROM detalle_pedido
-                WHERE pedido_id = ?
+                WHERE pedido_id = $1
                 `,
                 [pedido.id],
             )
@@ -349,19 +349,19 @@ export const resolvers = {
         pedido: async (
             detalle: { pedido_id: number },
         ) => {
-            const [rows] = await db.query(
+            const { rows } = await db.query(
                 `
                 SELECT
                     id,
-                    DATE_FORMAT(
+                    TO_CHAR(
                         fecha,
-                        '%Y-%m-%d %H:%i:%s'
+                        'YYYY-MM-DD HH24:MI:SS'
                     ) AS fecha,
                     total,
                     status,
                     usuario_id
                 FROM pedido
-                WHERE id = ?
+                WHERE id = $1
                 `,
                 [detalle.pedido_id],
             )
@@ -380,7 +380,7 @@ export const resolvers = {
         producto: async (
             detalle: { producto_id: number },
         ) => {
-            const [rows] = await db.query(
+            const { rows } = await db.query(
                 `
                 SELECT
                     id,
@@ -390,7 +390,7 @@ export const resolvers = {
                     stock,
                     categoria_id
                 FROM producto
-                WHERE id = ?
+                WHERE id = $1
                 `,
                 [detalle.producto_id],
             )
@@ -428,9 +428,9 @@ export const resolvers = {
                 ),
             })
 
-            const [categoriaRows] =
+            const { rows: categoriaRows } =
                 await db.query(
-                    'SELECT id FROM categoria WHERE id = ?',
+                    'SELECT id FROM categoria WHERE id = $1',
                     [input.categoria_id],
                 )
 
@@ -444,7 +444,7 @@ export const resolvers = {
                 )
             }
 
-            const [result] = await db.execute(
+            const result = await db.query(
                 `
                 INSERT INTO producto
                     (
@@ -454,7 +454,8 @@ export const resolvers = {
                         stock,
                         categoria_id
                     )
-                VALUES (?, ?, ?, ?, ?)
+                VALUES ($1, $2, $3, $4, $5)
+                RETURNING id
                 `,
                 [
                     input.nombre,
@@ -465,11 +466,9 @@ export const resolvers = {
                 ],
             )
 
-            const insertResult = result as {
-                insertId: number
-            }
+            const insertId = result.rows[0].id
 
-            const [rows] = await db.query(
+            const { rows } = await db.query(
                 `
                 SELECT
                     id,
@@ -479,9 +478,9 @@ export const resolvers = {
                     stock,
                     categoria_id
                 FROM producto
-                WHERE id = ?
+                WHERE id = $1
                 `,
-                [insertResult.insertId],
+                [insertId],
             )
 
             const productos = rows as {
@@ -521,9 +520,9 @@ export const resolvers = {
 
             const id = Number(args.id)
 
-            const [existingRows] =
+            const { rows: existingRows } =
                 await db.query(
-                    'SELECT id FROM producto WHERE id = ?',
+                    'SELECT id FROM producto WHERE id = $1',
                     [id],
                 )
 
@@ -538,9 +537,9 @@ export const resolvers = {
                 input.categoria_id !==
                 undefined
             ) {
-                const [categoriaRows] =
+                const { rows: categoriaRows } =
                     await db.query(
-                        'SELECT id FROM categoria WHERE id = ?',
+                        'SELECT id FROM categoria WHERE id = $1',
                         [input.categoria_id],
                     )
 
@@ -561,23 +560,25 @@ export const resolvers = {
                 string | number
             )[] = []
 
+            let paramIndex = 1
+
             if (input.nombre !== undefined) {
-                fields.push('nombre = ?')
+                fields.push(`nombre = $${paramIndex++}`)
                 values.push(input.nombre)
             }
 
             if (input.precio !== undefined) {
-                fields.push('precio = ?')
+                fields.push(`precio = $${paramIndex++}`)
                 values.push(input.precio)
             }
 
             if (input.imagen !== undefined) {
-                fields.push('imagen = ?')
+                fields.push(`imagen = $${paramIndex++}`)
                 values.push(input.imagen)
             }
 
             if (input.stock !== undefined) {
-                fields.push('stock = ?')
+                fields.push(`stock = $${paramIndex++}`)
                 values.push(input.stock)
             }
 
@@ -586,7 +587,7 @@ export const resolvers = {
                 undefined
             ) {
                 fields.push(
-                    'categoria_id = ?',
+                    `categoria_id = $${paramIndex++}`,
                 )
                 values.push(
                     input.categoria_id,
@@ -596,17 +597,17 @@ export const resolvers = {
             if (fields.length > 0) {
                 values.push(id)
 
-                await db.execute(
+                await db.query(
                     `
                     UPDATE producto
                     SET ${fields.join(', ')}
-                    WHERE id = ?
+                    WHERE id = $${paramIndex}
                     `,
                     values,
                 )
             }
 
-            const [rows] = await db.query(
+            const { rows } = await db.query(
                 `
                 SELECT
                     id,
@@ -616,7 +617,7 @@ export const resolvers = {
                     stock,
                     categoria_id
                 FROM producto
-                WHERE id = ?
+                WHERE id = $1
                 `,
                 [id],
             )
@@ -637,17 +638,13 @@ export const resolvers = {
             _: unknown,
             args: { id: string },
         ) => {
-            const [result] =
-                await db.execute(
-                    'DELETE FROM producto WHERE id = ?',
+            const result =
+                await db.query(
+                    'DELETE FROM producto WHERE id = $1',
                     [Number(args.id)],
                 )
 
-            const deleteResult = result as {
-                affectedRows: number
-            }
-
-            return deleteResult.affectedRows > 0
+            return result.rowCount !== null && result.rowCount > 0
         },
 
         crearPedido: async (
@@ -667,23 +664,23 @@ export const resolvers = {
                     args.input,
                 )
 
-            const connection =
-                await db.getConnection()
+            const client =
+                await db.connect()
 
             try {
-                await connection.beginTransaction()
+                await client.query('BEGIN')
 
                 const usuarioId = Number(
                     input.usuario_id,
                 )
 
-                const [
-                    usuarioRows,
-                ] = await connection.query(
+                const {
+                    rows: usuarioRows,
+                } = await client.query(
                     `
                     SELECT id
                     FROM usuario
-                    WHERE id = ?
+                    WHERE id = $1
                     `,
                     [usuarioId],
                 )
@@ -713,10 +710,10 @@ export const resolvers = {
                             detalle.producto_id,
                         )
 
-                    const [
-                        productoRows,
-                    ] =
-                        await connection.query(
+                    const {
+                        rows: productoRows,
+                    } =
+                        await client.query(
                             `
                             SELECT
                                 id,
@@ -724,7 +721,7 @@ export const resolvers = {
                                 precio,
                                 stock
                             FROM producto
-                            WHERE id = ?
+                            WHERE id = $1
                             FOR UPDATE
                             `,
                             [productoId],
@@ -770,10 +767,8 @@ export const resolvers = {
                     })
                 }
 
-                const [
-                    pedidoResult,
-                ] =
-                    await connection.execute(
+                const pedidoResult =
+                    await client.query(
                         `
                         INSERT INTO pedido
                             (
@@ -785,27 +780,23 @@ export const resolvers = {
                         VALUES
                             (
                                 NOW(),
-                                ?,
+                                $1,
                                 'CONFIRMADO',
-                                ?
+                                $2
                             )
+                        RETURNING id
                         `,
                         [total, usuarioId],
                     )
 
-                const pedidoInsert =
-                    pedidoResult as {
-                        insertId: number
-                    }
-
                 const pedidoId =
-                    pedidoInsert.insertId
+                    pedidoResult.rows[0].id
 
                 for (
                     const detalle of
                     detallesConPrecio
                 ) {
-                    await connection.execute(
+                    await client.query(
                         `
                         INSERT INTO detalle_pedido
                             (
@@ -814,7 +805,7 @@ export const resolvers = {
                                 cantidad,
                                 precio
                             )
-                        VALUES (?, ?, ?, ?)
+                        VALUES ($1, $2, $3, $4)
                         `,
                         [
                             pedidoId,
@@ -824,11 +815,11 @@ export const resolvers = {
                         ],
                     )
 
-                    await connection.execute(
+                    await client.query(
                         `
                         UPDATE producto
-                        SET stock = stock - ?
-                        WHERE id = ?
+                        SET stock = stock - $1
+                        WHERE id = $2
                         `,
                         [
                             detalle.cantidad,
@@ -837,22 +828,22 @@ export const resolvers = {
                     )
                 }
 
-                await connection.commit()
+                await client.query('COMMIT')
 
-                const [rows] =
-                    await connection.query(
+                const { rows } =
+                    await client.query(
                         `
                         SELECT
                             id,
-                            DATE_FORMAT(
+                            TO_CHAR(
                                 fecha,
-                                '%Y-%m-%d %H:%i:%s'
+                                'YYYY-MM-DD HH24:MI:SS'
                             ) AS fecha,
                             total,
                             status,
                             usuario_id
                         FROM pedido
-                    WHERE id = ?
+                    WHERE id = $1
                     `,
                         [pedidoId],
                     )
@@ -868,10 +859,10 @@ export const resolvers = {
 
                 return pedidos[0]
             } catch (error) {
-                await connection.rollback()
+                await client.query('ROLLBACK')
                 throw error
             } finally {
-                connection.release()
+                client.release()
             }
         },
     },

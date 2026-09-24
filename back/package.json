@@ -3,8 +3,12 @@
   "module": "index.ts",
   "type": "module",
   "private": true,
+  "scripts": {
+    "dev": "./index.ts"
+  },
   "devDependencies": {
-    "@types/bun": "^1.4.2"
+    "@types/bun": "^1.4.2",
+    "@types/pg": "^8.11.11"
   },
   "peerDependencies": {
     "typescript": "^7"
@@ -14,7 +18,7 @@
     "@cypriotunknown/apollo-hono": "^0.1.12",
     "graphql": "16.11.0",
     "hono": "^4.13.7",
-    "mysql2": "^3.24.4",
+    "pg": "^8.13.3",
     "zod": "^4.6.2"
   }
 }

@@ -9,11 +9,11 @@ function Hero() {
         </p>
 
         <h2>
-          Encuentra algo
-          <br />
-          que te represente.
+          Encuentra
+          <br/> tu propia
+          <br/>
+          manera de ser.
         </h2>
-
         <p className="hero__description">
           Explora nuestro catálogo y descubre
           productos hechos para acompañar tu estilo.

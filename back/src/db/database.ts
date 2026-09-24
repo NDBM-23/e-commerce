@@ -1,11 +1,10 @@
-import mysql from 'mysql2/promise'
+import { Pool } from 'pg'
 
-export const db = mysql.createPool({
+export const db = new Pool({
     host: 'localhost',
-    port: 3306,
+    port: 5432,
     user: 'p26_app',
     password: 'P26_Ecommerce_2026',
     database: 'p26_ecommerce',
-    waitForConnections: true,
-    connectionLimit: 10,
+    max: 10,
 })

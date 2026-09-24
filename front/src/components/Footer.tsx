@@ -1,11 +1,10 @@
 function Footer() {
   return (
     <footer>
-      <p>
-        © 2026 Mi E-commerce
+      <p style={{fontFamily:'PixelifySans',color:' #ffffff',width: '100%', textAlign: 'center'}}>
+        © 2026 Ceti-Verso
       </p>
     </footer>
   )
 }
-
 export default Footer

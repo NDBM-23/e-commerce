@@ -9,10 +9,8 @@
 
 .sidebar__title {
   margin: 0 0 20px;
-
-  color: #888888;
-
-  font-size: 11px;
+  color: #ff6f00;
+  font-size: 22px;
   font-weight: 800;
   letter-spacing: 0.14em;
 }
@@ -42,9 +40,9 @@
 
   background: transparent;
 
-  color: #444444;
+  color: #ffffff;
 
-  font-size: 14px;
+  font-size: 19px;
   font-weight: 600;
 
   text-align: left;
@@ -55,15 +53,14 @@
 }
 
 .sidebar__item:hover {
-  color: #111111;
-  border-bottom-color: #111111;
+  color: #0062ff;
+  border-bottom-color: #0062ff;
 }
 
 .sidebar__arrow {
   opacity: 0;
-
+  font-size: 35px;
   transform: translateX(-6px);
-
   transition:
     opacity 0.2s ease,
     transform 0.2s ease;

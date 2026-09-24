@@ -8,13 +8,18 @@
     sans-serif;
 
   color: #111111;
-  background: #ffffff;
+ background: #292828;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
 }
-
+@font-face {
+  font-family: 'PixelifySans';
+  src: url('./Pixelify/static/PixelifySans-Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
 * {
   box-sizing: border-box;
 }
@@ -26,7 +31,7 @@ html {
 body {
   margin: 0;
   min-width: 320px;
-  background: #ffffff;
+
 }
 
 button,

@@ -21,7 +21,6 @@
 
 .home__main h2 {
   margin: 0 0 24px;
-
   font-size: 28px;
   font-weight: 900;
   letter-spacing: -0.04em;
@@ -90,6 +89,7 @@
 .skeleton--title {
   width: 180px;
   height: 34px;
+  
 }
 
 .skeleton-card {
@@ -143,10 +143,11 @@
 
 .home__load-more button {
   padding: 14px 28px;
-  border: 1px solid #111111;
-  background: #111111;
+  border-radius: 10px;
+  border: 1px solid #F47F26;
+  background: #F47F26;
   color: #ffffff;
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 800;
   letter-spacing: 0.08em;
   transition:
@@ -155,8 +156,9 @@
 }
 
 .home__load-more button:hover:not(:disabled) {
-  background: #ffffff;
-  color: #111111;
+  background: #0062ff;
+  border: 1px solid #0062ff;
+  color: #ffffff;
 }
 
 .home__load-more button:disabled {

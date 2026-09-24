@@ -2,99 +2,90 @@
   position: sticky;
   top: 0;
   z-index: 100;
-
   width: 100%;
-
-  background: #ffffff;
-  border-bottom: 1px solid #e5e5e5;
+  background-color: #0062ff; 
+  border-bottom: 4px solid #002244;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
 }
 
 .topbar__content {
-  width: min(
-    1400px,
-    calc(100% - 48px)
-  );
-
-  min-height: 76px;
+  width: min(1400px, calc(100% - 48px));
+  min-height: 70px;
   margin: 0 auto;
-
   display: flex;
   align-items: center;
   justify-content: space-between;
-
   gap: 32px;
 }
 
 .topbar__logo {
   padding: 0;
-
   border: 0;
   background: transparent;
+  color: #fbfbfb;
+  font-size: 25px;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  text-transform: uppercase;
+  transition: opacity 0.2s ease;
+}
 
-  color: #111111;
-
-  font-size: 18px;
-  font-weight: 900;
-  letter-spacing: -0.04em;
+.topbar__logo:hover {
+  opacity: 0.85;
 }
 
 .topbar__nav {
   display: flex;
   align-items: center;
-  gap: 28px;
+  gap: 98px;
 }
 
-.topbar__nav button {
-  padding: 8px 0;
-
-  border: 0;
-  background: transparent;
-
-  color: #555555;
-
-  font-size: 13px;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-
-  transition:
-    color 0.2s ease;
-}
-
-.topbar__nav button:hover {
-  color: #111111;
-}
 
 .topbar__cart {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   min-width: 120px;
-  padding: 12px 18px;
+  padding: 10px 18px;
 
-  border: 1px solid #111111;
-  background: #111111;
+  border: 1px solid #ffffff;
+  border-radius: 6px;
+  background-color: #ffffff;
 
-  color: #ffffff;
-
+  color: #003366;
   font-size: 13px;
   font-weight: 800;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.05em;
+  cursor: pointer;
 
-  transition:
-    background 0.2s ease,
-    color 0.2s ease;
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
 }
 
 .topbar__cart:hover {
-  background: #ffffff;
-  color: #111111;
-}
+  background-color: #F47F26;
+  color: #ffffff;
+  border-color: #F47F26;}
 
 .topbar__cart span {
-  margin-left: 4px;
+  margin-left: 6px;
+  background-color: #004081;
+  color: #ffffff;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.topbar__cart:hover span {
+  background-color: #ffffff;
+  color: #002244;
 }
 
 @media (max-width: 700px) {
   .topbar__content {
     width: calc(100% - 32px);
-    min-height: 68px;
+    min-height: 60px;
     gap: 16px;
   }
 
@@ -108,6 +99,6 @@
 
   .topbar__cart {
     min-width: auto;
-    padding: 10px 14px;
+    padding: 8px 12px;
   }
 }

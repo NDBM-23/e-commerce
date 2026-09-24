@@ -37,6 +37,6 @@ app.get(
 )
 
 export default {
-  port: 3000,
+  port: (4000),
   fetch: app.fetch,
 }

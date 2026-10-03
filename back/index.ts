@@ -5,6 +5,7 @@ import { cors } from 'hono/cors'
 
 import { typeDefs } from './src/graphql/schema'
 import { resolvers } from './src/graphql/resolvers'
+import { authRouter } from './src/auth/authRouter'
 
 const apollo = new ApolloServer({
   typeDefs,
@@ -15,16 +16,23 @@ await apollo.start()
 
 const app = new Hono()
 
+const corsOrigins = (process.env.CORS_ORIGINS || 'http://localhost:4321,http://localhost:5173')
+  .split(',')
+  .map((o) => o.trim())
+
 app.use(
   '*',
   cors({
-    origin: ['http://localhost:4321', 'http://localhost:5173'],
+    origin: corsOrigins,
+    credentials: true,
   }),
 )
 
 app.get('/', (c) => {
   return c.text('Backend funcionando')
 })
+
+app.route('/auth', authRouter)
 
 app.post(
   '/graphql',
@@ -37,6 +45,6 @@ app.get(
 )
 
 export default {
-  port: (4000),
+  port: Number(process.env.PORT) || 4000,
   fetch: app.fetch,
 }

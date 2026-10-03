@@ -2,3 +2,6 @@ local/
 **/node_modules/
 .vscode/
 README.md
+.b*
+.env
+.env.production

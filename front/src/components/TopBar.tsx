@@ -1,13 +1,26 @@
 import { useCartStore } from '../store/cartStore'
+import { useAuthStore } from '../store/authStore'
+import { API_URL } from '../config'
 import './TopBar.css'
 
 export default function TopBar() {
   const items = useCartStore((state) => state.items)
+  const user = useAuthStore((state) => state.user)
+  const clearUser = useAuthStore((state) => state.clearUser)
 
   const cartItems = items.reduce(
     (total, item) => total + item.quantity,
     0,
   )
+
+  const handleLogout = async () => {
+    await fetch(`${API_URL}/auth/logout`, {
+      method: 'POST',
+      credentials: 'include',
+    })
+    clearUser()
+    window.location.href = '/'
+  }
 
   return (
     <header className="topbar">
@@ -24,10 +37,24 @@ export default function TopBar() {
           <img src="https://media.tenor.com/uUNcnHwYJQEAAAAj/running-pikachu-transparent-snivee.gif" style={{ width: '100%', maxWidth: '100px' }} />
         </nav>
 
-        <a href="/cart" className="topbar__cart">
-          CARRITO
-          <span>({cartItems})</span>
-        </a>
+        <div className="topbar__actions">
+          {user ? (
+            <>
+              <span className="topbar__user">Hola, {user.nombre}</span>
+              <button className="topbar__logout" onClick={handleLogout}>
+                Cerrar sesión
+              </button>
+            </>
+          ) : (
+            <a href="/login" className="topbar__login">
+              Iniciar sesión
+            </a>
+          )}
+          <a href="/cart" className="topbar__cart">
+            CARRITO
+            <span>({cartItems})</span>
+          </a>
+        </div>
       </div>
     </header>
   )

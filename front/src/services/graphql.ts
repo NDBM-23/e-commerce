@@ -1,7 +1,6 @@
 import type { Category } from '../types/category'
 import type { Product } from '../types/product'
-
-const GRAPHQL_URL = import.meta.env.PUBLIC_GRAPHQL_URL || 'http://localhost:4000/graphql'
+import { GRAPHQL_URL } from '../config'
 
 export async function fetchGraphQL<T>(
   query: string,

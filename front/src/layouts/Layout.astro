@@ -24,5 +24,16 @@ const { title = 'Ceti-Verso | Tienda' } = Astro.props;
       <slot />
     </main>
     <Footer />
+    <script>
+      import { useAuthStore } from '../store/authStore'
+      import { API_URL } from '../config'
+      fetch(`${API_URL}/auth/me`, { credentials: 'include' })
+        .then((res) => (res.ok ? res.json() : null))
+        .then((user) => {
+          if (user) useAuthStore.getState().setUser(user)
+          else useAuthStore.getState().clearUser()
+        })
+        .catch(() => useAuthStore.getState().clearUser())
+    </script>
   </body>
 </html>

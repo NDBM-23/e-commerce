@@ -1,0 +1,120 @@
+.auth-page {
+  width: min(480px, calc(100% - 48px));
+  margin: 80px auto 100px;
+}
+
+.auth-page__eyebrow {
+  margin: 0 0 12px;
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+}
+
+.auth-page h2 {
+  margin: 0 0 40px;
+  color: #F47F26;
+  font-size: clamp(36px, 6vw, 56px);
+  line-height: 0.95;
+  letter-spacing: -0.055em;
+  font-weight: 900;
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.auth-form__field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 24px;
+  color: #ffffff;
+}
+
+.auth-form__field label {
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.auth-form__field input {
+  width: 100%;
+  padding: 15px 14px;
+  border: 1px solid #cccccc;
+  background: #ffffff;
+  color: #111111;
+  font-size: 16px;
+  outline: none;
+  transition: border-color 0.2s ease;
+  box-sizing: border-box;
+}
+
+.auth-form__field input::placeholder {
+  color: #999999;
+}
+
+.auth-form__field input:focus {
+  border-color: #F47F26;
+}
+
+.auth-form__error {
+  margin: 0 0 24px;
+  padding: 16px;
+  border-left: 3px solid #cc0000;
+  background: #fff0f0;
+  color: #cc0000;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.auth-form__submit {
+  width: 100%;
+  margin-top: 8px;
+  padding: 17px 20px;
+  border: 1px solid #111111;
+  background: #F47F26;
+  border-radius: 10px;
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.auth-form__submit:hover:not(:disabled) {
+  background: #0062ff;
+  border-color: #0062ff;
+  color: #ffffff;
+}
+
+.auth-form__submit:disabled {
+  border-color: #cccccc;
+  background: #eeeeee;
+  color: #999999;
+  cursor: not-allowed;
+}
+
+.auth-page__alt {
+  margin-top: 24px;
+  color: #aaaaaa;
+  font-size: 14px;
+}
+
+.auth-page__alt a {
+  color: #F47F26;
+  font-weight: 700;
+}
+
+.auth-page__alt a:hover {
+  color: #0062ff;
+}
+
+@media (max-width: 600px) {
+  .auth-page {
+    width: calc(100% - 32px);
+    margin: 48px auto 64px;
+  }
+}

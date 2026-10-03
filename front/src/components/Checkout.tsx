@@ -1,14 +1,14 @@
 import { useState, useTransition } from 'react'
 import { useCartStore } from '../store/cartStore'
+import { useAuthStore } from '../store/authStore'
 import { createOrder } from '../services/graphql'
 import '../styles/Checkout.css'
 
 export default function Checkout() {
   const items = useCartStore((state) => state.items)
   const clearCart = useCartStore((state) => state.clearCart)
+  const user = useAuthStore((state) => state.user)
 
-  const [name, setName] = useState('')
-  const [email, setEmail] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isSuccess, setIsSuccess] = useState(false)
   const [orderId, setOrderId] = useState<string | null>(null)
@@ -30,7 +30,7 @@ export default function Checkout() {
     setSubmitError(null)
 
     const input = {
-      usuario_id: 1,
+      usuario_id: user!.id,
       detalles: items.map((item) => ({
         producto_id: item.id,
         cantidad: item.quantity,
@@ -55,6 +55,25 @@ export default function Checkout() {
     } finally {
       setIsSubmitting(false)
     }
+  }
+
+  if (!user) {
+    return (
+      <main className="checkout-page">
+        <section className="checkout-empty">
+          <p className="checkout-page__eyebrow">CHECKOUT</p>
+          <h2>Sesión expirada</h2>
+          <p>Tu sesión ha expirado. Por favor inicia sesión nuevamente.</p>
+          <a
+            href="/login?redirect=/checkout"
+            className="checkout__back-button"
+            style={{ display: 'inline-block', textDecoration: 'none' }}
+          >
+            INICIAR SESIÓN
+          </a>
+        </section>
+      </main>
+    )
   }
 
   if (isSuccess) {
@@ -132,29 +151,17 @@ export default function Checkout() {
 
           <form className="checkout-form" onSubmit={handleSubmit}>
             <div className="checkout-form__field">
-              <label htmlFor="name">Nombre</label>
-
-              <input
-                id="name"
-                type="text"
-                value={name}
-                onChange={(event) => setName(event.target.value)}
-                placeholder="Tu nombre"
-                required
-              />
+              <label>Nombre</label>
+              <div style={{ padding: '15px 14px', background: '#f5f5f5', color: '#111111', fontSize: '16px', border: '1px solid #cccccc' }}>
+                {user.nombre}
+              </div>
             </div>
 
             <div className="checkout-form__field">
-              <label htmlFor="email">Correo electrónico</label>
-
-              <input
-                id="email"
-                type="email"
-                value={email}
-                onChange={(event) => setEmail(event.target.value)}
-                placeholder="correo@ejemplo.com"
-                required
-              />
+              <label>Correo electrónico</label>
+              <div style={{ padding: '15px 14px', background: '#f5f5f5', color: '#111111', fontSize: '16px', border: '1px solid #cccccc' }}>
+                {user.email}
+              </div>
             </div>
 
             {submitError && (

@@ -1,6 +1,11 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import CheckoutComponent from '../components/Checkout.tsx';
+
+const sid = Astro.cookies.get('sid');
+if (!sid?.value) {
+  return Astro.redirect('/login?redirect=/checkout');
+}
 ---
 
 <Layout title="Checkout | Ceti-Verso">

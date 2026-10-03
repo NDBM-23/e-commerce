@@ -1,58 +1,30 @@
-import {
-  useState,
-  useTransition,
-} from 'react'
+import { useState, useTransition } from 'react'
 import { useCartStore } from '../store/cartStore'
 import { createOrder } from '../services/graphql'
-import './Checkout.css'
+import '../styles/Checkout.css'
 
-type CheckoutProps = {
-  onBack: () => void
-  onOrderCreated: () => void
-}
-
-function Checkout({
-  onBack,
-  onOrderCreated,
-}: CheckoutProps) {
+export default function Checkout() {
   const items = useCartStore((state) => state.items)
-
-  const clearCart = useCartStore(
-    (state) => state.clearCart,
-  )
+  const clearCart = useCartStore((state) => state.clearCart)
 
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [isSuccess, setIsSuccess] = useState(false)
+  const [orderId, setOrderId] = useState<string | null>(null)
+  const [submitError, setSubmitError] = useState<string | null>(null)
 
-  const [isSubmitting, setIsSubmitting] =
-    useState(false)
-
-  const [isSuccess, setIsSuccess] =
-    useState(false)
-
-  const [orderId, setOrderId] =
-    useState<string | null>(null)
-
-  const [submitError, setSubmitError] =
-    useState<string | null>(null)
-
-  const [isPending, startTransition] =
-    useTransition()
+  const [isPending, startTransition] = useTransition()
 
   const total = items.reduce(
-    (sum, item) =>
-      sum + item.price * item.quantity,
+    (sum, item) => sum + item.price * item.quantity,
     0,
   )
 
-  const handleSubmit = async (
-    event: React.FormEvent,
-  ) => {
+  const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault()
 
-    if (isSubmitting) {
-      return
-    }
+    if (isSubmitting) return
 
     setIsSubmitting(true)
     setSubmitError(null)
@@ -101,20 +73,18 @@ function Checkout({
 
           <div className="checkout-success__order">
             <span>Número de pedido</span>
-
             <strong>#{orderId}</strong>
           </div>
 
-          <button
+          <a
+            href="/"
             className="checkout-success__button"
-            onClick={onOrderCreated}
+            style={{ display: 'inline-block', textDecoration: 'none' }}
           >
             VOLVER AL INICIO
-          </button>
+          </a>
 
-          {isPending && (
-            <p>Preparando...</p>
-          )}
+          {isPending && <p>Preparando...</p>}
         </section>
       </main>
     )
@@ -124,23 +94,19 @@ function Checkout({
     return (
       <main className="checkout-page">
         <section className="checkout-empty">
-          <p className="checkout-page__eyebrow">
-            CHECKOUT
-          </p>
+          <p className="checkout-page__eyebrow">CHECKOUT</p>
 
           <h2>No hay productos.</h2>
 
-          <p>
-            Agrega productos al carrito antes
-            de continuar.
-          </p>
+          <p>Agrega productos al carrito antes de continuar.</p>
 
-          <button
+          <a
+            href="/cart"
             className="checkout__back-button"
-            onClick={onBack}
+            style={{ display: 'inline-block', textDecoration: 'none' }}
           >
             VOLVER AL CARRITO
-          </button>
+          </a>
         </section>
       </main>
     )
@@ -149,61 +115,43 @@ function Checkout({
   return (
     <main className="checkout-page">
       <header className="checkout-page__header">
-        <button
-          className="checkout-page__back"
-          onClick={onBack}
-        >
+        <a href="/cart" className="checkout-page__back">
           ← Volver al carrito
-        </button>
+        </a>
 
-        <p className="checkout-page__eyebrow">
-          FINALIZAR COMPRA
-        </p>
+        <p className="checkout-page__eyebrow">FINALIZAR COMPRA</p>
 
         <h2>Checkout</h2>
       </header>
 
       <div className="checkout-page__layout">
         <section className="checkout-form-section">
-          <p className="checkout-section__eyebrow">
-            INFORMACIÓN
-          </p>
+          <p className="checkout-section__eyebrow">INFORMACIÓN</p>
 
           <h3>Datos del cliente</h3>
 
-          <form
-            className="checkout-form"
-            onSubmit={handleSubmit}
-          >
+          <form className="checkout-form" onSubmit={handleSubmit}>
             <div className="checkout-form__field">
-              <label htmlFor="name">
-                Nombre
-              </label>
+              <label htmlFor="name">Nombre</label>
 
               <input
                 id="name"
                 type="text"
                 value={name}
-                onChange={(event) =>
-                  setName(event.target.value)
-                }
+                onChange={(event) => setName(event.target.value)}
                 placeholder="Tu nombre"
                 required
               />
             </div>
 
             <div className="checkout-form__field">
-              <label htmlFor="email">
-                Correo electrónico
-              </label>
+              <label htmlFor="email">Correo electrónico</label>
 
               <input
                 id="email"
                 type="email"
                 value={email}
-                onChange={(event) =>
-                  setEmail(event.target.value)
-                }
+                onChange={(event) => setEmail(event.target.value)}
                 placeholder="correo@ejemplo.com"
                 required
               />
@@ -211,10 +159,7 @@ function Checkout({
 
             {submitError && (
               <div className="checkout-form__error">
-                <strong>
-                  No se pudo crear el pedido
-                </strong>
-
+                <strong>No se pudo crear el pedido</strong>
                 <p>{submitError}</p>
               </div>
             )}
@@ -224,40 +169,26 @@ function Checkout({
               type="submit"
               disabled={isSubmitting}
             >
-              {isSubmitting
-                ? 'CREANDO PEDIDO...'
-                : 'CONFIRMAR PEDIDO'}
+              {isSubmitting ? 'CREANDO PEDIDO...' : 'CONFIRMAR PEDIDO'}
             </button>
           </form>
         </section>
 
         <aside className="checkout-summary">
-          <p className="checkout-section__eyebrow">
-            RESUMEN
-          </p>
+          <p className="checkout-section__eyebrow">RESUMEN</p>
 
           <h3>Tu pedido</h3>
 
           <div className="checkout-summary__items">
             {items.map((item) => (
-              <article
-                className="checkout-summary__item"
-                key={item.id}
-              >
+              <article className="checkout-summary__item" key={item.id}>
                 <div>
                   <p>{item.name}</p>
-
-                  <span>
-                    Cantidad: {item.quantity}
-                  </span>
+                  <span>Cantidad: {item.quantity}</span>
                 </div>
 
                 <strong>
-                  $
-                  {(
-                    item.price *
-                    item.quantity
-                  ).toFixed(2)}
+                  ${(item.price * item.quantity).toFixed(2)}
                 </strong>
               </article>
             ))}
@@ -265,15 +196,10 @@ function Checkout({
 
           <div className="checkout-summary__total">
             <span>Total</span>
-
-            <strong>
-              ${total.toFixed(2)}
-            </strong>
+            <strong>${total.toFixed(2)}</strong>
           </div>
         </aside>
       </div>
     </main>
   )
 }
-
-export default Checkout

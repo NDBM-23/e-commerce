@@ -1,0 +1,8 @@
+---
+import Layout from '../layouts/Layout.astro';
+import CartComponent from '../components/Cart.tsx';
+---
+
+<Layout title="Carrito | Ceti-Verso">
+  <CartComponent client:only="react" />
+</Layout>

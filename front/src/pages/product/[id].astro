@@ -1,0 +1,31 @@
+---
+export const prerender = false;
+import Layout from '../../layouts/Layout.astro';
+import ProductDetail from '../../components/ProductDetail.tsx';
+import { getProductById } from '../../services/graphql';
+
+const { id } = Astro.params;
+const productId = Number(id);
+
+let product = null;
+
+if (productId) {
+  try {
+    product = await getProductById(productId);
+  } catch (e) {
+    console.error('Error al obtener producto:', e);
+  }
+}
+---
+
+<Layout title={product ? `${product.name} | Ceti-Verso` : 'Producto no encontrado'}>
+  {product ? (
+    <ProductDetail client:load product={product} />
+  ) : (
+    <main style="text-align: center; padding: 100px 20px;">
+      <a href="/" style="color: #ffffff; text-decoration: underline;">← Volver al inicio</a>
+      <h2 style="color: #F47F26; margin-top: 20px;">Producto no encontrado</h2>
+      <p style="color: #ffffff;">El producto que buscas no existe o fue removido.</p>
+    </main>
+  )}
+</Layout>

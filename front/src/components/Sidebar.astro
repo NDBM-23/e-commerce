@@ -1,0 +1,24 @@
+---
+import type { Category } from '../types/category';
+import './Sidebar.css';
+
+interface Props {
+  categories: Category[];
+}
+
+const { categories } = Astro.props;
+---
+<aside class="sidebar">
+  <p class="sidebar__title">CATEGORÍAS</p>
+
+  <ul class="sidebar__list">
+    {categories.map((category) => (
+      <li>
+        <a href={`/category/${category.id}`} class="sidebar__item">
+          <span>{category.name}</span>
+          <span class="sidebar__arrow">→</span>
+        </a>
+      </li>
+    ))}
+  </ul>
+</aside>

@@ -1,56 +1,35 @@
 import { useCartStore } from '../store/cartStore'
-import './Cart.css'
+import '../styles/Cart.css'
 
-type CartProps = {
-  onBack: () => void
-  onCheckout: () => void
-}
-
-function Cart({
-  onBack,
-  onCheckout,
-}: CartProps) {
+export default function Cart() {
   const items = useCartStore((state) => state.items)
-
-  const removeFromCart = useCartStore(
-    (state) => state.removeFromCart,
-  )
-
-  const updateQuantity = useCartStore(
-    (state) => state.updateQuantity,
-  )
-
-  const clearCart = useCartStore(
-    (state) => state.clearCart,
-  )
+  const removeFromCart = useCartStore((state) => state.removeFromCart)
+  const updateQuantity = useCartStore((state) => state.updateQuantity)
+  const clearCart = useCartStore((state) => state.clearCart)
 
   const total = items.reduce(
-    (sum, item) =>
-      sum + item.price * item.quantity,
+    (sum, item) => sum + item.price * item.quantity,
     0,
   )
+
+  const handleCheckout = () => {
+    window.location.href = '/checkout'
+  }
 
   return (
     <main className="cart-page">
       <header className="cart-page__header">
-        <button
-          className="cart-page__back"
-          onClick={onBack}
-        >
+        <a href="/" className="cart-page__back">
           ← Seguir comprando
-        </button>
+        </a>
 
-        <p className="cart-page__eyebrow">
-          TU COMPRA
-        </p>
+        <p className="cart-page__eyebrow">TU COMPRA</p>
 
         <h2>Carrito</h2>
 
         <p className="cart-page__count">
           {items.length}{' '}
-          {items.length === 1
-            ? 'producto'
-            : 'productos'}
+          {items.length === 1 ? 'producto' : 'productos'}
         </p>
       </header>
 
@@ -59,25 +38,22 @@ function Cart({
           <h3>Tu carrito está vacío.</h3>
 
           <p>
-            Explora nuestro catálogo y agrega
-            algunos productos.
+            Explora nuestro catálogo y agrega algunos productos.
           </p>
 
-          <button
+          <a
+            href="/"
             className="cart-page__continue"
-            onClick={onBack}
+            style={{ display: 'inline-block', textDecoration: 'none' }}
           >
             EXPLORAR PRODUCTOS
-          </button>
+          </a>
         </section>
       ) : (
         <div className="cart-page__layout">
           <section className="cart-page__items">
             {items.map((item) => (
-              <article
-                className="cart-item"
-                key={item.id}
-              >
+              <article className="cart-item" key={item.id}>
                 <div className="cart-item__image-wrapper">
                   <img
                     src={item.image}
@@ -98,9 +74,7 @@ function Cart({
 
                     <button
                       className="cart-item__remove"
-                      onClick={() =>
-                        removeFromCart(item.id)
-                      }
+                      onClick={() => removeFromCart(item.id)}
                     >
                       ELIMINAR
                     </button>
@@ -118,9 +92,7 @@ function Cart({
                         onChange={(event) =>
                           updateQuantity(
                             item.id,
-                            Number(
-                              event.target.value,
-                            ),
+                            Number(event.target.value),
                           )
                         }
                       />
@@ -129,11 +101,7 @@ function Cart({
                     <p>
                       Subtotal:{' '}
                       <strong>
-                        $
-                        {(
-                          item.price *
-                          item.quantity
-                        ).toFixed(2)}
+                        ${(item.price * item.quantity).toFixed(2)}
                       </strong>
                     </p>
                   </div>
@@ -143,17 +111,14 @@ function Cart({
           </section>
 
           <aside className="cart-page__summary">
-            <p className="cart-page__summary-eyebrow">
-              RESUMEN
-            </p>
+            <p className="cart-page__summary-eyebrow">RESUMEN</p>
 
             <div className="cart-page__summary-row">
               <span>Productos</span>
 
               <span>
                 {items.reduce(
-                  (total, item) =>
-                    total + item.quantity,
+                  (total, item) => total + item.quantity,
                   0,
                 )}
               </span>
@@ -162,14 +127,12 @@ function Cart({
             <div className="cart-page__summary-row cart-page__summary-total">
               <span>Total</span>
 
-              <strong>
-                ${total.toFixed(2)}
-              </strong>
+              <strong>${total.toFixed(2)}</strong>
             </div>
 
             <button
               className="cart-page__checkout"
-              onClick={onCheckout}
+              onClick={handleCheckout}
             >
               CONTINUAR AL CHECKOUT
             </button>
@@ -186,5 +149,3 @@ function Cart({
     </main>
   )
 }
-
-export default Cart

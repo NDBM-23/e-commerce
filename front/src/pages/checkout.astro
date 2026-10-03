@@ -1,0 +1,8 @@
+---
+import Layout from '../layouts/Layout.astro';
+import CheckoutComponent from '../components/Checkout.tsx';
+---
+
+<Layout title="Checkout | Ceti-Verso">
+  <CheckoutComponent client:only="react" />
+</Layout>

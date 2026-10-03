@@ -1,0 +1,69 @@
+---
+export const prerender = false;
+import Layout from '../../layouts/Layout.astro';
+import ProductCard from '../../components/ProductCard.astro';
+import { getCategoryById } from '../../services/graphql';
+import '../../styles/CategoryDetail.css';
+
+const { id } = Astro.params;
+const categoryId = Number(id);
+
+let category = null;
+let error = null;
+
+if (categoryId) {
+  try {
+    category = await getCategoryById(categoryId);
+  } catch (e) {
+    error = e instanceof Error ? e.message : 'Error al cargar la categoría';
+  }
+}
+---
+
+<Layout title={category ? `${category.name} | Ceti-Verso` : 'Categoría no encontrada'}>
+  <main class="category-detail">
+    {error ? (
+      <div>
+        <a href="/" class="category-detail__back">← Volver al inicio</a>
+        <h2 style="color: #F47F26; margin-top: 20px;">Error</h2>
+        <p style="color: #ffffff;">{error}</p>
+      </div>
+    ) : !category ? (
+      <div>
+        <a href="/" class="category-detail__back">← Volver al inicio</a>
+        <h2 style="color: #F47F26; margin-top: 20px;">Categoría no encontrada</h2>
+      </div>
+    ) : (
+      <>
+        <div class="category-detail__header">
+          <a href="/" class="category-detail__back">
+            ← Volver
+          </a>
+
+          <p class="category-detail__eyebrow">
+            CATEGORÍA
+          </p>
+
+          <h2>{category.name}</h2>
+
+          <p class="category-detail__count">
+            {category.products.length}{' '}
+            {category.products.length === 1 ? 'producto' : 'productos'}
+          </p>
+        </div>
+
+        {category.products.length === 0 ? (
+          <section class="category-detail__empty">
+            <p>No hay productos en esta categoría.</p>
+          </section>
+        ) : (
+          <div class="category-detail__products">
+            {category.products.map((product) => (
+              <ProductCard product={product} />
+            ))}
+          </div>
+        )}
+      </>
+    )}
+  </main>
+</Layout>

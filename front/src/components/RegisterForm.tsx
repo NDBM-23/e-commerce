@@ -1,6 +1,6 @@
 import { useState } from 'react'
-import { useAuthStore } from '../store/authStore'
 import { API_URL } from '../config'
+import { useAuthStore } from '../store/authStore'
 import '../styles/Auth.css'
 
 export default function RegisterForm() {
@@ -9,38 +9,45 @@ export default function RegisterForm() {
   const [nombre, setNombre] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [cpassword, setcPassword] = useState('')
+
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (loading) return
+    if (password == cpassword) {
+      setLoading(true)
+      setError(null)
 
-    setLoading(true)
-    setError(null)
+      try {
+        const res = await fetch(`${API_URL}/auth/register`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
+          body: JSON.stringify({ nombre, email, password }),
+        })
 
-    try {
-      const res = await fetch(`${API_URL}/auth/register`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',
-        body: JSON.stringify({ nombre, email, password }),
-      })
+        const data = await res.json()
 
-      const data = await res.json()
+        if (!res.ok) {
+          setError(data.error || 'Error al registrarse')
+          return
+        }
 
-      if (!res.ok) {
-        setError(data.error || 'Error al registrarse')
-        return
+        setUser(data)
+        window.location.href = '/'
+      } catch {
+        setError('No se pudo conectar al servidor')
+      } finally {
+        setLoading(false)
       }
-
-      setUser(data)
-      window.location.href = '/'
-    } catch {
-      setError('No se pudo conectar al servidor')
-    } finally {
-      setLoading(false)
     }
+    else {
+      alert("No coinciden las contraseñas")
+    }
+
   }
 
   return (
@@ -81,6 +88,18 @@ export default function RegisterForm() {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             placeholder="Mínimo 6 caracteres"
+            minLength={6}
+            required
+          />
+        </div>
+        <div className="auth-form__field">
+          <label htmlFor="passwordconfirm">Confirmar contraseña</label>
+          <input
+            id="passwordconfirm"
+            type="password"
+            value={cpassword}
+            onChange={(e) => setcPassword(e.target.value)}
+            placeholder="Confirmar"
             minLength={6}
             required
           />

@@ -1,8 +1,8 @@
+import bcrypt from 'bcryptjs'
 import { Hono } from 'hono'
 import { z } from 'zod'
-import bcrypt from 'bcryptjs'
 import { db } from '../db/database'
-import { createSession, getSession, destroySession } from './session'
+import { createSession, destroySession, getSession } from './session'
 
 export const authRouter = new Hono()
 
@@ -22,7 +22,7 @@ authRouter.post('/register', async (c) => {
   const body = await c.req.json().catch(() => null)
   const parsed = registerSchema.safeParse(body)
   if (!parsed.success) {
-    return c.json({ error: 'Datos inválidos' }, 400)
+    return c.json({ error: 'Ingresa un email valido siguiendo el ejemplo' }, 400)
   }
 
   const { nombre, email, password } = parsed.data

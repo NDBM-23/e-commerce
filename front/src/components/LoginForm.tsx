@@ -1,6 +1,6 @@
 import { useState } from 'react'
-import { useAuthStore } from '../store/authStore'
 import { API_URL } from '../config'
+import { useAuthStore } from '../store/authStore'
 import '../styles/Auth.css'
 
 interface Props {

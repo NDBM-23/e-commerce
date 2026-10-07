@@ -1,6 +1,6 @@
 /**
  * Base URL of the REST API backend.
- * Set PUBLIC_API_URL in .env (local) or in Netlify environment variables (production).
+ * Set PUBLIC_API_URL in .env (local) or in environment variables (production).
  */
 export const API_URL = import.meta.env.PUBLIC_API_URL || 'http://localhost:4000'
 

@@ -8,12 +8,12 @@ export const authRouter = new Hono()
 
 const registerSchema = z.object({
   nombre: z.string().min(1),
-  email: z.email(),
+  email: z.string().regex(/^[^\s@]+@[^\s@]+\.[^\s@]+$/, 'Ingresa un email valido siguiendo el ejemplo'),
   password: z.string().min(6),
 })
 
 const loginSchema = z.object({
-  email: z.email(),
+  email: z.string().regex(/^[^\s@]+@[^\s@]+\.[^\s@]+$/),
   password: z.string().min(1),
 })
 
@@ -42,6 +42,9 @@ authRouter.post('/register', async (c) => {
   )
 
   const user = result.rows[0]
+  if (!user) {
+  return c.json({ error: 'Error al crear el usuario' }, 500)
+}
   await createSession(c, user)
   return c.json(user, 201)
 })
@@ -68,10 +71,9 @@ authRouter.post('/login', async (c) => {
   }
 
   const row = result.rows[0]
-
-  if (!row.password_hash) {
-    return c.json({ error: 'Credenciales incorrectas' }, 401)
-  }
+  if (!row) {return c.json({ error: 'Credenciales incorrectas' }, 401) }
+  
+  if (!row.password_hash) {return c.json({ error: 'Credenciales incorrectas' }, 401)}
 
   const valid = await bcrypt.compare(password, row.password_hash)
   if (!valid) {

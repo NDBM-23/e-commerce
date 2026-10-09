@@ -1,9 +1,15 @@
 import { db } from '../db/database'
 import {
+    createOrderSchema,
     createProductSchema,
     updateProductSchema,
-    createOrderSchema,
 } from '../validation/schemas'
+
+import type { SessionUser } from '../auth/session'
+
+interface GraphQLContext {
+    user: SessionUser | null
+}
 
 export const resolvers = {
     Query: {
@@ -133,20 +139,32 @@ export const resolvers = {
             return productos[0] ?? null
         },
 
-        pedidos: async () => {
-            const { rows } = await db.query(`
+        pedidos: async (
+            _: unknown,
+            __: unknown,
+            context: GraphQLContext,
+        ) => {
+            if (!context.user) {
+                throw new Error('No autenticado')
+            }
+
+            const { rows } = await db.query(
+                `
                 SELECT
-                id,
-                TO_CHAR(
+                    id,
+                    TO_CHAR(
                     fecha,
                     'YYYY-MM-DD HH24:MI:SS'
-                ) AS fecha,
-                total,
-                status,
-                usuario_id
-            FROM pedido
+                    ) AS fecha,
+                    total,
+                    status,
+                    usuario_id
+                FROM pedido
+                WHERE usuario_id = $1
                 ORDER BY fecha DESC
-            `)
+            `,
+                [context.user.id],
+            )
 
             return rows
         },

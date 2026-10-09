@@ -1,0 +1,33 @@
+---
+import OrderCard from "../components/OrderCard.astro";
+import Layout from "../layouts/Layout.astro";
+import { getOrders } from "../services/graphql";
+
+let orders = null;
+
+try {
+    const cookie = Astro.request.headers.get("cookie");
+
+    orders = await getOrders(cookie ?? undefined);
+    console.log(orders);
+} catch (e) {
+    console.error("Error al obtener los pedidos:", e);
+}
+---
+
+<Layout title="Pedidos | Ceti-Verso">
+    <main>
+        <h1>Mis pedidos</h1>
+        {
+            orders && orders.length > 0 ? (
+                <section>
+                    {orders.map((order) => (
+                        <OrderCard order={order} />
+                    ))}
+                </section>
+            ) : (
+                <p>No tienes pedidos registrados.</p>
+            )
+        }
+    </main>
+</Layout>

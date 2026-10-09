@@ -1,17 +1,28 @@
-import type { Category } from '../types/category'
-import type { Product } from '../types/product'
 import { GRAPHQL_URL } from '../config'
+import type { Category } from '../types/category'
+import type { Order } from '../types/order'
+import type { Product } from '../types/product'
+
 
 export async function fetchGraphQL<T>(
   query: string,
   variables?: Record<string, unknown>,
+  cookie?: string,
 ): Promise<T> {
   const response = await fetch(GRAPHQL_URL, {
     method: 'POST',
 
     headers: {
       'Content-Type': 'application/json',
+
+      ...(cookie
+        ? {
+          Cookie: cookie,
+        }
+        : {}),
     },
+
+    credentials: 'include',
 
     body: JSON.stringify({
       query,
@@ -21,7 +32,7 @@ export async function fetchGraphQL<T>(
 
   if (!response.ok) {
     throw new Error(
-      `Error HTTP: ${response.status}`,
+      `Error HTTP: ${response.status} `,
     )
   }
 
@@ -200,6 +211,12 @@ export type PaginatedProducts = {
   hayMas: boolean
 }
 
+export type PaginatedOrders = {
+  orders: Order[]
+  siguienteCursor: string | null
+  hayMas: boolean
+}
+
 export type CreateOrderInput = {
   usuario_id: number
   detalles: {
@@ -300,4 +317,71 @@ export async function getProducts(
       data.productos.siguienteCursor,
     hayMas: data.productos.hayMas,
   }
+}
+
+export async function getOrders(
+  cookie?: string,
+): Promise<Order[]> {
+  const query = `
+    query ObtenerPedidos {
+      pedidos {
+    id
+    fecha
+    total
+        detalles {
+      cantidad
+      precio
+          producto {
+        id
+        nombre
+        precio
+        imagen
+        stock
+        categoria_id
+      }
+    }
+  }
+}
+`
+
+  const data = await fetchGraphQL<{
+    pedidos: {
+      id: string
+      fecha: string
+      total: number
+      detalles: {
+        cantidad: number
+        precio: number
+        producto: {
+          id: string
+          nombre: string
+          precio: number
+          imagen: string
+          stock: number
+          categoria_id: string
+        }
+      }[]
+    }[]
+  }>(query, undefined, cookie)
+
+  return data.pedidos.map(
+    (order): Order => ({
+      id: Number(order.id),
+      date: order.fecha,
+      total: order.total,
+
+      products: order.detalles.map(
+        (detalle): Product => ({
+          id: Number(detalle.producto.id),
+          name: detalle.producto.nombre,
+          price: detalle.precio,
+          image: detalle.producto.imagen,
+          stock: detalle.producto.stock,
+          categoryId: Number(
+            detalle.producto.categoria_id,
+          ),
+        }),
+      ),
+    }),
+  )
 }

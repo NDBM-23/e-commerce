@@ -1,0 +1,31 @@
+---
+import type { Order } from "../types/order";
+import "./OrderCard.css";
+interface Props {
+    order: Order;
+}
+const { order } = Astro.props;
+---
+
+<article class="order-card">
+    <header class="order-card__header">
+        <div><span>Pedido #{order.id}</span> <h2>Pedido realizado</h2></div>
+        <strong>${order.total.toFixed(2)}</strong>
+    </header>
+    <p class="order-card__date">{order.date}</p>
+    <div class="order-card__products">
+        {
+            order.products.map((product) => (
+                <div class="order-card__product">
+                    {" "}
+                    <img src={product.image} alt={product.name} />{" "}
+                    <div>
+                        {" "}
+                        <h3>{product.name}</h3>{" "}
+                        <span>${product.price.toFixed(2)}</span>{" "}
+                    </div>{" "}
+                </div>
+            ))
+        }
+    </div>
+</article>

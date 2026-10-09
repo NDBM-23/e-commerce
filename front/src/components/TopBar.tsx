@@ -1,6 +1,6 @@
-import { useCartStore } from '../store/cartStore'
-import { useAuthStore } from '../store/authStore'
 import { API_URL } from '../config'
+import { useAuthStore } from '../store/authStore'
+import { useCartStore } from '../store/cartStore'
 import './TopBar.css'
 
 export default function TopBar() {
@@ -40,7 +40,6 @@ export default function TopBar() {
         <div className="topbar__actions">
           {user ? (
             <>
-              <span className="topbar__user">Hola, {user.nombre}</span>
               <button className="topbar__logout" onClick={handleLogout}>
                 Cerrar sesión
               </button>
@@ -54,6 +53,16 @@ export default function TopBar() {
             CARRITO
             <span>({cartItems})</span>
           </a>
+          {user && (
+            <>
+              <a href='/orders-history' className="topbar__history">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="30" fill="currentColor">
+                  <path d="M12 4a8 8 0 1 0 7.35 4.86.8.8 0 1 1 1.48-.62A9.6 9.6 0 1 1 12 2.4c2.5 0 4.8 0.95 6.55 2.53V3.2a.8.8 0 0 1 1.6 0v4a.8.8 0 0 1-.8.8h-4a.8.8 0 0 1 0-1.6h2.23A7.97 7.97 0 0 0 12 4z" />
+                  <path d="M12 7a.8.8 0 0 1 .8.8v4.25l2.83 2.83a.8.8 0 0 1-1.13 1.13l-3.1-3.1A.8.8 0 0 1 11.2 12V7.8A.8.8 0 0 1 12 7z" />
+                </svg>
+              </a>
+            </>
+          )}
         </div>
       </div>
     </header>

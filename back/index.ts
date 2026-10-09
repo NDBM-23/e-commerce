@@ -3,9 +3,11 @@ import { httpHandler } from '@cypriotunknown/apollo-hono'
 import { Hono } from 'hono'
 import { cors } from 'hono/cors'
 
-import { typeDefs } from './src/graphql/schema'
-import { resolvers } from './src/graphql/resolvers'
 import { authRouter } from './src/auth/authRouter'
+import { getSession } from './src/auth/session'
+import { resolvers } from './src/graphql/resolvers'
+import { typeDefs } from './src/graphql/schema'
+
 
 const apollo = new ApolloServer({
   typeDefs,
@@ -36,12 +38,26 @@ app.route('/auth', authRouter)
 
 app.post(
   '/graphql',
-  httpHandler(apollo),
+  httpHandler(apollo, {
+    context: async ({ honoCtx }) => {
+      const user = await getSession(honoCtx)
+      return {
+        user,
+      }
+    },
+  }),
 )
 
 app.get(
   '/graphql',
-  httpHandler(apollo),
+  httpHandler(apollo, {
+    context: async ({ honoCtx }) => {
+      const user = await getSession(honoCtx)
+      return {
+        user,
+      }
+    },
+  }),
 )
 
 export default {

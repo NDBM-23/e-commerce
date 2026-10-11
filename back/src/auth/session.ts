@@ -20,7 +20,7 @@ export async function createSession(c: Context, user: SessionUser): Promise<void
     [user.id, expiresAt],
   )
 
-  const sessionId = result.rows[0].id
+  const sessionId = result.rows[0]!.id
 
   setCookie(c, COOKIE_NAME, sessionId, {
     httpOnly: true,
@@ -45,7 +45,7 @@ export async function getSession(c: Context): Promise<SessionUser | null> {
 
   if (result.rows.length === 0) return null
 
-  const row = result.rows[0]
+  const row = result.rows[0]!
 
   if (new Date(row.expires_at) < new Date()) {
     await db.query('DELETE FROM sesion WHERE id = $1', [sessionId])

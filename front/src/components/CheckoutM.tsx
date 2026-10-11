@@ -36,7 +36,6 @@ export default function CheckoutComponentM({ publicKey }: Props) {
 
     const [paymentError, setPaymentError] = useState<string | null>(null);
 
-    // Genera una clave nueva cuando cambia el contenido del carrito.
     useEffect(() => {
         idempotencyKeyRef.current = crypto.randomUUID();
         isSubmittingRef.current = false;
@@ -81,11 +80,10 @@ export default function CheckoutComponentM({ publicKey }: Props) {
                             formData: any,
                             additionalData: any
                         ) => {
-                            // Evita dos envíos simultáneos.
                             if (isSubmittingRef.current) {
                                 return Promise.reject(
                                     new Error(
-                                        "Ya se está procesando el pago."
+                                        "Payment is already being processed."
                                     )
                                 );
                             }
@@ -181,13 +179,13 @@ export default function CheckoutComponentM({ publicKey }: Props) {
                                         isSubmittingRef.current = false;
 
                                         console.error(
-                                            "Error al procesar pago:",
+                                            "Payment processing error:",
                                             error
                                         );
 
                                         setPaymentError(
                                             error.message ??
-                                            "Error al procesar el pago. Intenta de nuevo."
+                                            "Payment failed. Please try again."
                                         );
 
                                         reject(error);
@@ -196,7 +194,7 @@ export default function CheckoutComponentM({ publicKey }: Props) {
                         },
                         onError: (error: any) => {
                             console.error(
-                                "Error en Card Payment Brick:",
+                                "Card Payment Brick error:",
                                 error
                             );
                         },
@@ -226,7 +224,7 @@ export default function CheckoutComponentM({ publicKey }: Props) {
                 }
             } catch (err) {
                 console.error(
-                    "Error al inicializar MercadoPago Brick:",
+                    "Failed to initialize MercadoPago Brick:",
                     err
                 );
             }

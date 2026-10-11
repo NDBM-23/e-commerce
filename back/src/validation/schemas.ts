@@ -3,102 +3,101 @@ import { z } from 'zod'
 export const createProductSchema = z.object({
   nombre: z
     .string()
-    .min(1, 'El nombre es obligatorio'),
+    .min(1, 'Name is required'),
 
   precio: z
     .number()
-    .positive('El precio debe ser mayor que 0'),
+    .positive('Price must be greater than 0'),
 
   imagen: z
     .string()
-    .min(1, 'La imagen es obligatoria'),
+    .min(1, 'Image is required'),
 
   stock: z
     .number()
-    .int('El stock debe ser un entero')
-    .nonnegative('El stock no puede ser negativo'),
+    .int('Stock must be an integer')
+    .nonnegative('Stock cannot be negative'),
 
   categoria_id: z
     .number()
-    .int('El ID de categoría debe ser un entero')
-    .positive('El ID de categoría debe ser válido'),
+    .int('Category ID must be an integer')
+    .positive('Category ID must be valid'),
 })
 
 export const updateProductSchema = z.object({
   nombre: z
     .string()
-    .min(1, 'El nombre no puede estar vacío')
+    .min(1, 'Name cannot be empty')
     .optional(),
 
   precio: z
     .number()
-    .positive('El precio debe ser mayor que 0')
+    .positive('Price must be greater than 0')
     .optional(),
 
   imagen: z
     .string()
-    .min(1, 'La imagen no puede estar vacía')
+    .min(1, 'Image cannot be empty')
     .optional(),
 
   stock: z
     .number()
-    .int('El stock debe ser un entero')
-    .nonnegative('El stock no puede ser negativo')
+    .int('Stock must be an integer')
+    .nonnegative('Stock cannot be negative')
     .optional(),
 
   categoria_id: z
     .number()
-    .int('El ID de categoría debe ser un entero')
-    .positive('El ID de categoría debe ser válido')
+    .int('Category ID must be an integer')
+    .positive('Category ID must be valid')
     .optional(),
 })
 
-const detallePedidoSchema = z.object({
+const orderDetailSchema = z.object({
   producto_id: z
     .coerce
     .number()
-    .int('El ID del producto debe ser un entero')
-    .positive('El ID del producto debe ser válido'),
+    .int('Product ID must be an integer')
+    .positive('Product ID must be valid'),
 
   cantidad: z
     .number()
-    .int('La cantidad debe ser un entero')
-    .positive('La cantidad debe ser mayor que 0'),
+    .int('Quantity must be an integer')
+    .positive('Quantity must be greater than 0'),
 })
 
 export const createOrderSchema = z.object({
   usuario_id: z
     .coerce
     .number()
-    .int('El ID del usuario debe ser un entero')
-    .positive('El ID del usuario debe ser válido'),
+    .int('User ID must be an integer')
+    .positive('User ID must be valid'),
 
   detalles: z
-    .array(detallePedidoSchema)
-    .min(1, 'El pedido debe tener al menos un producto'),
+    .array(orderDetailSchema)
+    .min(1, 'Order must have at least one product'),
 })
-
 
 const orderItemSchema = z.object({
   producto_id: z
     .number()
-    .int('El ID del producto debe ser un entero')
-    .positive('El ID del producto debe ser válido'),
+    .int('Product ID must be an integer')
+    .positive('Product ID must be valid'),
 
   cantidad: z
     .number()
-    .int('La cantidad debe ser un entero')
-    .positive('La cantidad debe ser mayor que 0'),
+    .int('Quantity must be an integer')
+    .positive('Quantity must be greater than 0'),
 })
 
 const positiveMoneyString = z
   .string()
   .regex(
     /^\d+(\.\d{1,2})?$/,
-    'El importe debe tener un formato monetario válido',
+    'Amount must be a valid monetary format',
   )
   .refine((value) => Number(value) > 0, {
-    message: 'El importe debe ser mayor que 0',
+    message: 'Amount must be greater than 0',
   })
 
 export const processOrderSchema = z.object({
@@ -117,26 +116,26 @@ export const processOrderSchema = z.object({
           amount: positiveMoneyString,
 
           payment_method: z.object({
-            id: z.string().min(1, 'El método de pago es obligatorio'),
+            id: z.string().min(1, 'Payment method is required'),
 
             type: z.string().min(1).optional(),
 
             token: z
               .string()
-              .min(1, 'El token no puede estar vacío'),
+              .min(1, 'Token cannot be empty'),
 
             installments: z
               .number()
-              .int('Las mensualidades deben ser un entero')
-              .positive('Las mensualidades deben ser mayores que 0'),
+              .int('Installments must be an integer')
+              .positive('Installments must be greater than 0'),
           }),
         }),
       )
-      .length(1, 'Debe enviarse exactamente un pago'),
+      .length(1, 'Exactly one payment must be provided'),
   }),
 
   payer: z.object({
-    email: z.string().email('El email del pagador no es válido'),
+    email: z.string().email('Payer email is not valid'),
 
     identification: z
       .object({
@@ -148,5 +147,5 @@ export const processOrderSchema = z.object({
 
   items: z
     .array(orderItemSchema)
-    .min(1, 'El pedido debe tener al menos un producto'),
+    .min(1, 'Order must have at least one product'),
 })

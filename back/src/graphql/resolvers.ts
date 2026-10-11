@@ -30,12 +30,12 @@ export const resolvers = {
                 [Number(args.id)],
             )
 
-            const categorias = rows as {
+            const categories = rows as {
                 id: number
                 nombre: string
             }[]
 
-            return categorias[0] ?? null
+            return categories[0] ?? null
         },
 
         productos: async (
@@ -45,7 +45,7 @@ export const resolvers = {
                 cursor?: string | null
             },
         ) => {
-            const limite = Math.min(
+            const limit = Math.min(
                 Math.max(args.limite, 1),
                 50,
             )
@@ -56,7 +56,7 @@ export const resolvers = {
 
             if (!Number.isInteger(cursor) || cursor < 0) {
                 throw new Error(
-                    'El cursor debe ser un ID válido.',
+                    'Cursor must be a valid ID.',
                 )
             }
 
@@ -74,10 +74,10 @@ export const resolvers = {
                 ORDER BY id ASC
                 LIMIT $2
                 `,
-                [cursor, limite + 1],
+                [cursor, limit + 1],
             )
 
-            const productos = rows as {
+            const products = rows as {
                 id: number
                 nombre: string
                 precio: number
@@ -86,25 +86,23 @@ export const resolvers = {
                 categoria_id: number
             }[]
 
-            const hayMas =
-                productos.length > limite
+            const hasMore = products.length > limit
 
-            if (hayMas) {
-                productos.pop()
+            if (hasMore) {
+                products.pop()
             }
 
-            const ultimoProducto =
-                productos[productos.length - 1]
+            const lastProduct = products[products.length - 1]
 
-            const siguienteCursor =
-                hayMas && ultimoProducto
-                    ? String(ultimoProducto.id)
+            const nextCursor =
+                hasMore && lastProduct
+                    ? String(lastProduct.id)
                     : null
 
             return {
-                productos,
-                siguienteCursor,
-                hayMas,
+                productos: products,
+                siguienteCursor: nextCursor,
+                hayMas: hasMore,
             }
         },
 
@@ -127,7 +125,7 @@ export const resolvers = {
                 [Number(args.id)],
             )
 
-            const productos = rows as {
+            const products = rows as {
                 id: number
                 nombre: string
                 precio: number
@@ -136,7 +134,7 @@ export const resolvers = {
                 categoria_id: number
             }[]
 
-            return productos[0] ?? null
+            return products[0] ?? null
         },
 
         pedidos: async (
@@ -145,7 +143,7 @@ export const resolvers = {
             context: GraphQLContext,
         ) => {
             if (!context.user) {
-                throw new Error('No autenticado')
+                throw new Error('Unauthenticated')
             }
 
             const { rows } = await db.query(
@@ -190,7 +188,7 @@ export const resolvers = {
                 [Number(args.id)],
             )
 
-            const pedidos = rows as {
+            const orders = rows as {
                 id: number
                 fecha: string
                 total: number
@@ -198,7 +196,7 @@ export const resolvers = {
                 usuario_id: number
             }[]
 
-            return pedidos[0] ?? null
+            return orders[0] ?? null
         },
 
         usuarios: async () => {
@@ -231,14 +229,14 @@ export const resolvers = {
                 [Number(args.id)],
             )
 
-            const usuarios = rows as {
+            const users = rows as {
                 id: number
                 nombre: string
                 email: string
                 rol: string
             }[]
 
-            return usuarios[0] ?? null
+            return users[0] ?? null
         },
     },
 
@@ -280,12 +278,12 @@ export const resolvers = {
                 [producto.categoria_id],
             )
 
-            const categorias = rows as {
+            const categories = rows as {
                 id: number
                 nombre: string
             }[]
 
-            return categorias[0] ?? null
+            return categories[0] ?? null
         },
     },
 
@@ -332,14 +330,14 @@ export const resolvers = {
                 [pedido.usuario_id],
             )
 
-            const usuarios = rows as {
+            const users = rows as {
                 id: number
                 nombre: string
                 email: string
                 rol: string
             }[]
 
-            return usuarios[0] ?? null
+            return users[0] ?? null
         },
 
         detalles: async (
@@ -384,7 +382,7 @@ export const resolvers = {
                 [detalle.pedido_id],
             )
 
-            const pedidos = rows as {
+            const orders = rows as {
                 id: number
                 fecha: string
                 total: number
@@ -392,7 +390,7 @@ export const resolvers = {
                 usuario_id: number
             }[]
 
-            return pedidos[0] ?? null
+            return orders[0] ?? null
         },
 
         producto: async (
@@ -413,7 +411,7 @@ export const resolvers = {
                 [detalle.producto_id],
             )
 
-            const productos = rows as {
+            const products = rows as {
                 id: number
                 nombre: string
                 precio: number
@@ -422,7 +420,7 @@ export const resolvers = {
                 categoria_id: number
             }[]
 
-            return productos[0] ?? null
+            return products[0] ?? null
         },
     },
 
@@ -446,20 +444,18 @@ export const resolvers = {
                 ),
             })
 
-            const { rows: categoriaRows } =
+            const { rows: categoryRows } =
                 await db.query(
                     'SELECT id FROM categoria WHERE id = $1',
                     [input.categoria_id],
                 )
 
-            const categorias = categoriaRows as {
+            const categories = categoryRows as {
                 id: number
             }[]
 
-            if (categorias.length === 0) {
-                throw new Error(
-                    'La categoría no existe',
-                )
+            if (categories.length === 0) {
+                throw new Error('Category does not exist')
             }
 
             const result = await db.query(
@@ -501,7 +497,7 @@ export const resolvers = {
                 [insertId],
             )
 
-            const productos = rows as {
+            const products = rows as {
                 id: number
                 nombre: string
                 precio: number
@@ -510,7 +506,7 @@ export const resolvers = {
                 categoria_id: number
             }[]
 
-            return productos[0]
+            return products[0]
         },
 
         actualizarProducto: async (
@@ -551,32 +547,25 @@ export const resolvers = {
                 return null
             }
 
-            if (
-                input.categoria_id !==
-                undefined
-            ) {
-                const { rows: categoriaRows } =
+            if (input.categoria_id !== undefined) {
+                const { rows: categoryRows } =
                     await db.query(
                         'SELECT id FROM categoria WHERE id = $1',
                         [input.categoria_id],
                     )
 
-                const categorias =
-                    categoriaRows as {
+                const categories =
+                    categoryRows as {
                         id: number
                     }[]
 
-                if (categorias.length === 0) {
-                    throw new Error(
-                        'La categoría no existe',
-                    )
+                if (categories.length === 0) {
+                    throw new Error('Category does not exist')
                 }
             }
 
             const fields: string[] = []
-            const values: (
-                string | number
-            )[] = []
+            const values: (string | number)[] = []
 
             let paramIndex = 1
 
@@ -600,16 +589,11 @@ export const resolvers = {
                 values.push(input.stock)
             }
 
-            if (
-                input.categoria_id !==
-                undefined
-            ) {
+            if (input.categoria_id !== undefined) {
                 fields.push(
                     `categoria_id = $${paramIndex++}`,
                 )
-                values.push(
-                    input.categoria_id,
-                )
+                values.push(input.categoria_id)
             }
 
             if (fields.length > 0) {
@@ -640,7 +624,7 @@ export const resolvers = {
                 [id],
             )
 
-            const productos = rows as {
+            const products = rows as {
                 id: number
                 nombre: string
                 precio: number
@@ -649,7 +633,7 @@ export const resolvers = {
                 categoria_id: number
             }[]
 
-            return productos[0] ?? null
+            return products[0] ?? null
         },
 
         eliminarProducto: async (
@@ -677,60 +661,42 @@ export const resolvers = {
                 }
             },
         ) => {
-            const input =
-                createOrderSchema.parse(
-                    args.input,
-                )
+            const input = createOrderSchema.parse(args.input)
 
-            const client =
-                await db.connect()
+            const client = await db.connect()
 
             try {
                 await client.query('BEGIN')
 
-                const usuarioId = Number(
-                    input.usuario_id,
-                )
+                const userId = Number(input.usuario_id)
 
-                const {
-                    rows: usuarioRows,
-                } = await client.query(
+                const { rows: userRows } = await client.query(
                     `
                     SELECT id
                     FROM usuario
                     WHERE id = $1
                     `,
-                    [usuarioId],
+                    [userId],
                 )
 
-                const usuarios =
-                    usuarioRows as {
-                        id: number
-                    }[]
+                const users = userRows as { id: number }[]
 
-                if (usuarios.length === 0) {
-                    throw new Error(
-                        'El usuario no existe',
-                    )
+                if (users.length === 0) {
+                    throw new Error('User does not exist')
                 }
 
                 let total = 0
 
-                const detallesConPrecio: {
-                    producto_id: number
-                    cantidad: number
-                    precio: number
+                const orderLines: {
+                    product_id: number
+                    quantity: number
+                    price: number
                 }[] = []
 
-                for (const detalle of input.detalles) {
-                    const productoId =
-                        Number(
-                            detalle.producto_id,
-                        )
+                for (const detail of input.detalles) {
+                    const productId = Number(detail.producto_id)
 
-                    const {
-                        rows: productoRows,
-                    } =
+                    const { rows: productRows } =
                         await client.query(
                             `
                             SELECT
@@ -742,78 +708,63 @@ export const resolvers = {
                             WHERE id = $1
                             FOR UPDATE
                             `,
-                            [productoId],
+                            [productId],
                         )
 
-                    const productos =
-                        productoRows as {
-                            id: number
-                            nombre: string
-                            precio: number
-                            stock: number
-                        }[]
+                    const products = productRows as {
+                        id: number
+                        nombre: string
+                        precio: number
+                        stock: number
+                    }[]
 
-                    const producto =
-                        productos[0]
+                    const product = products[0]
 
-                    if (!producto) {
+                    if (!product) {
                         throw new Error(
-                            `El producto ${productoId} no existe`,
+                            `Product ${productId} does not exist`,
                         )
                     }
 
-                    if (
-                        detalle.cantidad >
-                        producto.stock
-                    ) {
+                    if (detail.cantidad > product.stock) {
                         throw new Error(
-                            `No hay suficiente stock de ${producto.nombre}`,
+                            `Not enough stock for ${product.nombre}`,
                         )
                     }
 
-                    total +=
-                        producto.precio *
-                        detalle.cantidad
+                    total += product.precio * detail.cantidad
 
-                    detallesConPrecio.push({
-                        producto_id:
-                            producto.id,
-                        cantidad:
-                            detalle.cantidad,
-                        precio:
-                            producto.precio,
+                    orderLines.push({
+                        product_id: product.id,
+                        quantity: detail.cantidad,
+                        price: product.precio,
                     })
                 }
 
-                const pedidoResult =
-                    await client.query(
-                        `
-                        INSERT INTO pedido
-                            (
-                                fecha,
-                                total,
-                                status,
-                                usuario_id
-                            )
-                        VALUES
-                            (
-                                NOW(),
-                                $1,
-                                'CONFIRMADO',
-                                $2
-                            )
-                        RETURNING id
-                        `,
-                        [total, usuarioId],
-                    )
+                const orderResult = await client.query(
+                    `
+                    INSERT INTO pedido
+                        (
+                            fecha,
+                            total,
+                            status,
+                            usuario_id
+                        )
+                    VALUES
+                        (
+                            NOW(),
+                            $1,
+                            'CONFIRMADO',
+                            $2
+                        )
+                    RETURNING id
+                    `,
+                    [total, userId],
+                )
 
-                const pedidoId =
-                    pedidoResult.rows[0].id
+                const orderId = orderResult.rows[0].id
 
-                for (
-                    const detalle of
-                    detallesConPrecio
-                ) {
+                for (const line of orderLines) {
                     await client.query(
                         `
                         INSERT INTO detalle_pedido
@@ -826,10 +777,10 @@ export const resolvers = {
                         VALUES ($1, $2, $3, $4)
                         `,
                         [
-                            pedidoId,
-                            detalle.producto_id,
-                            detalle.cantidad,
-                            detalle.precio,
+                            orderId,
+                            line.product_id,
+                            line.quantity,
+                            line.price,
                         ],
                     )
 
@@ -839,43 +790,38 @@ export const resolvers = {
                         SET stock = stock - $1
                         WHERE id = $2
                         `,
-                        [
-                            detalle.cantidad,
-                            detalle.producto_id,
-                        ],
+                        [line.quantity, line.product_id],
                     )
                 }
 
                 await client.query('COMMIT')
 
-                const { rows } =
-                    await client.query(
-                        `
-                        SELECT
-                            id,
-                            TO_CHAR(
-                                fecha,
-                                'YYYY-MM-DD HH24:MI:SS'
-                            ) AS fecha,
-                            total,
-                            status,
-                            usuario_id
-                        FROM pedido
+                const { rows } = await client.query(
+                    `
+                    SELECT
+                        id,
+                        TO_CHAR(
+                            fecha,
+                            'YYYY-MM-DD HH24:MI:SS'
+                        ) AS fecha,
+                        total,
+                        status,
+                        usuario_id
+                    FROM pedido
                     WHERE id = $1
                     `,
-                        [pedidoId],
-                    )
+                    [orderId],
+                )
 
-                const pedidos =
-                    rows as {
-                        id: number
-                        fecha: Date
-                        total: number
-                        status: string
-                        usuario_id: number
-                    }[]
+                const orders = rows as {
+                    id: number
+                    fecha: Date
+                    total: number
+                    status: string
+                    usuario_id: number
+                }[]
 
-                return pedidos[0]
+                return orders[0]
             } catch (error) {
                 await client.query('ROLLBACK')
                 throw error

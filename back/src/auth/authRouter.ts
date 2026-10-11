@@ -17,19 +17,18 @@ const loginSchema = z.object({
   password: z.string().min(1),
 })
 
-// POST /auth/register
 authRouter.post('/register', async (c) => {
   const body = await c.req.json().catch(() => null)
   const parsed = registerSchema.safeParse(body)
   if (!parsed.success) {
-    return c.json({ error: 'Ingresa un email valido siguiendo el ejemplo' }, 400)
+    return c.json({ error: 'invalid_input' }, 400)
   }
 
   const { nombre, email, password } = parsed.data
 
   const existing = await db.query('SELECT id FROM usuario WHERE email = $1', [email])
   if (existing.rows.length > 0) {
-    return c.json({ error: 'El correo ya está registrado' }, 409)
+    return c.json({ error: 'email_already_registered' }, 409)
   }
 
   const password_hash = await bcrypt.hash(password, 10)
@@ -41,17 +40,16 @@ authRouter.post('/register', async (c) => {
     [nombre, email, password_hash],
   )
 
-  const user = result.rows[0]
+  const user = result.rows[0]!
   await createSession(c, user)
   return c.json(user, 201)
 })
 
-// POST /auth/login
 authRouter.post('/login', async (c) => {
   const body = await c.req.json().catch(() => null)
   const parsed = loginSchema.safeParse(body)
   if (!parsed.success) {
-    return c.json({ error: 'Datos inválidos' }, 400)
+    return c.json({ error: 'invalid_input' }, 400)
   }
 
   const { email, password } = parsed.data
@@ -64,18 +62,18 @@ authRouter.post('/login', async (c) => {
   }>('SELECT id, nombre, email, password_hash FROM usuario WHERE email = $1', [email])
 
   if (result.rows.length === 0) {
-    return c.json({ error: 'Credenciales incorrectas' }, 401)
+    return c.json({ error: 'invalid_credentials' }, 401)
   }
 
-  const row = result.rows[0]
+  const row = result.rows[0]!
 
   if (!row.password_hash) {
-    return c.json({ error: 'Credenciales incorrectas' }, 401)
+    return c.json({ error: 'invalid_credentials' }, 401)
   }
 
   const valid = await bcrypt.compare(password, row.password_hash)
   if (!valid) {
-    return c.json({ error: 'Credenciales incorrectas' }, 401)
+    return c.json({ error: 'invalid_credentials' }, 401)
   }
 
   const user = { id: row.id, nombre: row.nombre, email: row.email }
@@ -83,17 +81,15 @@ authRouter.post('/login', async (c) => {
   return c.json(user)
 })
 
-// POST /auth/logout
 authRouter.post('/logout', async (c) => {
   await destroySession(c)
   return c.json({ ok: true })
 })
 
-// GET /auth/me
 authRouter.get('/me', async (c) => {
   const user = await getSession(c)
   if (!user) {
-    return c.json({ error: 'No autenticado' }, 401)
+    return c.json({ error: 'unauthenticated' }, 401)
   }
   return c.json(user)
 })

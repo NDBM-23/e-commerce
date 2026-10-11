@@ -77,3 +77,76 @@ export const createOrderSchema = z.object({
     .array(detallePedidoSchema)
     .min(1, 'El pedido debe tener al menos un producto'),
 })
+
+
+const orderItemSchema = z.object({
+  producto_id: z
+    .number()
+    .int('El ID del producto debe ser un entero')
+    .positive('El ID del producto debe ser válido'),
+
+  cantidad: z
+    .number()
+    .int('La cantidad debe ser un entero')
+    .positive('La cantidad debe ser mayor que 0'),
+})
+
+const positiveMoneyString = z
+  .string()
+  .regex(
+    /^\d+(\.\d{1,2})?$/,
+    'El importe debe tener un formato monetario válido',
+  )
+  .refine((value) => Number(value) > 0, {
+    message: 'El importe debe ser mayor que 0',
+  })
+
+export const processOrderSchema = z.object({
+  type: z.literal('online'),
+
+  total_amount: positiveMoneyString,
+
+  external_reference: z.string().uuid(),
+
+  processing_mode: z.literal('automatic'),
+
+  transactions: z.object({
+    payments: z
+      .array(
+        z.object({
+          amount: positiveMoneyString,
+
+          payment_method: z.object({
+            id: z.string().min(1, 'El método de pago es obligatorio'),
+
+            type: z.string().min(1).optional(),
+
+            token: z
+              .string()
+              .min(1, 'El token no puede estar vacío'),
+
+            installments: z
+              .number()
+              .int('Las mensualidades deben ser un entero')
+              .positive('Las mensualidades deben ser mayores que 0'),
+          }),
+        }),
+      )
+      .length(1, 'Debe enviarse exactamente un pago'),
+  }),
+
+  payer: z.object({
+    email: z.string().email('El email del pagador no es válido'),
+
+    identification: z
+      .object({
+        type: z.string().min(1),
+        number: z.string().min(1),
+      })
+      .optional(),
+  }),
+
+  items: z
+    .array(orderItemSchema)
+    .min(1, 'El pedido debe tener al menos un producto'),
+})

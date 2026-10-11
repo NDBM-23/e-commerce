@@ -4,6 +4,7 @@ import { Hono } from 'hono'
 import { cors } from 'hono/cors'
 
 import { authRouter } from './src/auth/authRouter'
+import { apiRouter } from './src/api/apiRouter'
 import { getSession } from './src/auth/session'
 import { resolvers } from './src/graphql/resolvers'
 import { typeDefs } from './src/graphql/schema'
@@ -35,6 +36,7 @@ app.get('/', (c) => {
 })
 
 app.route('/auth', authRouter)
+app.route('/api', apiRouter)
 
 app.post(
   '/graphql',

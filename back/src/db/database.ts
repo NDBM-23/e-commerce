@@ -4,7 +4,7 @@ export const db = new Pool({
   host: process.env.DB_HOST || 'localhost',
   port: Number(process.env.DB_PORT) || 5432,
   user: process.env.DB_USER || 'p26_app',
-  password: process.env.DB_PASSWORD || 'P26_Ecommerce_2026',
+  password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME || 'p26_ecommerce',
   max: 10,
 })

@@ -27,18 +27,25 @@ export default function LoginForm({ redirect = '/' }: Props) {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ email, password}),
       })
 
       const data = await res.json()
 
       if (!res.ok) {
         setError(data.error || 'Error al iniciar sesión')
+        setLoading(false)
         return
       }
-
       setUser(data)
-      window.location.href = redirect
+if(res.ok){
+if(data.rol=== 'ADMIN'){
+  window.location.href = '/admin/dashboard';
+}
+else{
+window.location.href = redirect
+}
+}
     } catch {
       setError('No se pudo conectar al servidor')
     } finally {

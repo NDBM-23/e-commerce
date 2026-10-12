@@ -33,10 +33,10 @@ authRouter.post('/register', async (c) => {
 
   const password_hash = await bcrypt.hash(password, 10)
 
-  const result = await db.query<{ id: number; nombre: string; email: string }>(
+  const result = await db.query<{ id: number; nombre: string; email: string, rol:string }>(
     `INSERT INTO usuario (nombre, email, rol, password_hash)
      VALUES ($1, $2, 'USER', $3)
-     RETURNING id, nombre, email`,
+     RETURNING id, nombre, email,rol`,
     [nombre, email, password_hash],
   )
 
@@ -59,7 +59,8 @@ authRouter.post('/login', async (c) => {
     nombre: string
     email: string
     password_hash: string | null
-  }>('SELECT id, nombre, email, password_hash FROM usuario WHERE email = $1', [email])
+    rol: string
+  }>('SELECT id, nombre, email, password_hash, rol FROM usuario WHERE email = $1', [email])
 
   if (result.rows.length === 0) {
     return c.json({ error: 'invalid_credentials' }, 401)
@@ -76,10 +77,14 @@ authRouter.post('/login', async (c) => {
     return c.json({ error: 'invalid_credentials' }, 401)
   }
 
-  const user = { id: row.id, nombre: row.nombre, email: row.email }
+  const user = { id: row.id, nombre: row.nombre, email: row.email, rol:row.rol }
   await createSession(c, user)
   return c.json(user)
 })
+
+
+
+
 
 authRouter.post('/logout', async (c) => {
   await destroySession(c)

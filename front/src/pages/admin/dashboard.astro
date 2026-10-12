@@ -1,0 +1,26 @@
+---
+import AdminDashboard from '../../components/AdminDashboard';
+const cookieHeader = Astro.request.headers.get('cookie') || '';
+const response = await fetch('http://localhost:4000/auth/me', {
+  headers: {
+    cookie: cookieHeader, 
+  },
+});
+if (!response.ok) {
+  return Astro.redirect('/login');
+}
+const user = await response.json();
+if (user.rol !== 'ADMIN') {
+  return Astro.redirect('/');
+}
+---
+
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Panel de Administrador</title>
+  </head>
+  <body>
+    <AdminDashboard client:load initialUser={user} />
+  </body>
+</html>

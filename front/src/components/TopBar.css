@@ -15,7 +15,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 8px;
+  gap: 16px;
 }
 
 .topbar__logo {
@@ -23,11 +23,12 @@
   border: 0;
   background: transparent;
   color: #fbfbfb;
-  font-size: 25px;
+  font-size: 20px; 
   font-weight: 800;
   letter-spacing: 0.05em;
   cursor: pointer;
   text-transform: uppercase;
+  white-space: nowrap; 
   transition: opacity 0.2s ease;
 }
 
@@ -38,9 +39,8 @@
 .topbar__nav {
   display: flex;
   align-items: center;
-  gap: 98px;
+  gap: 70px; 
 }
-
 
 .topbar__cart {
   display: flex;
@@ -48,18 +48,31 @@
   justify-content: center;
   min-width: 120px;
   padding: 10px 18px;
-
   border: 1px solid #ffffff;
   border-radius: 6px;
   background-color: #ffffff;
-
   color: #003366;
   font-size: 13px;
   font-weight: 800;
   letter-spacing: 0.05em;
   cursor: pointer;
-
   transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+.topbar__AD {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #ff7a18;
+  color: #ffffff;
+  padding: 10px 12px;
+  border-radius: 6px;
+  text-decoration: none;
+  transition: background 0.2s;
+}
+
+.topbar__AD:hover {
+  background-color: #e06812;
 }
 
 .topbar__cart:hover {

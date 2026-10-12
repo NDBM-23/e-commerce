@@ -9,6 +9,7 @@ export interface SessionUser {
   id: number
   nombre: string
   email: string
+  rol: string
 }
 
 export async function createSession(c: Context, user: SessionUser): Promise<void> {
@@ -36,7 +37,7 @@ export async function getSession(c: Context): Promise<SessionUser | null> {
   if (!sessionId) return null
 
   const result = await db.query<SessionUser & { expires_at: Date }>(
-    `SELECT u.id, u.nombre, u.email, s.expires_at
+    `SELECT u.id, u.nombre, u.email, s.expires_at, u.rol
      FROM sesion s
      JOIN usuario u ON u.id = s.usuario_id
      WHERE s.id = $1`,
@@ -52,7 +53,7 @@ export async function getSession(c: Context): Promise<SessionUser | null> {
     return null
   }
 
-  return { id: row.id, nombre: row.nombre, email: row.email }
+  return { id: row.id, nombre: row.nombre, email: row.email, rol: row.rol }
 }
 
 export async function destroySession(c: Context): Promise<void> {

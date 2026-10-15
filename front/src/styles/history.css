@@ -1,0 +1,77 @@
+:root {
+  --orders-title-color: #F47F26;
+  --orders-subtitle-color: #0062FF;
+  --empty-bg: #222222;
+  --empty-border: #333333;
+  --empty-text: #A1A1AA;
+}
+
+.orders-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 2.5rem 1.5rem 4rem 1.5rem;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.orders-header {
+  margin-bottom: 2rem;
+  text-align: left;
+}
+
+.orders-header h1 {
+  font-size: 2.25rem;
+  font-weight: 700;
+  color: var(--orders-title-color);
+  margin: 0 0 0.5rem 0;
+  letter-spacing: -0.025em;
+}
+
+.orders-subtitle {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--orders-subtitle-color);
+  margin: 0;
+}
+
+.orders-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.empty-orders {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+  border-radius: 1rem;
+  background-color: var(--empty-bg);
+  border: 1px dashed var(--empty-border);
+  text-align: center;
+  margin-top: 1rem;
+}
+
+.empty-title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--orders-title-color);
+  margin: 0 0 0.5rem 0;
+}
+
+.empty-text {
+  font-size: 0.95rem;
+  color: var(--empty-text);
+  margin: 0;
+}
+
+@media (max-width: 640px) {
+  .orders-container {
+    padding: 1.5rem 1rem 3rem 1rem;
+  }
+
+  .orders-header h1 {
+    font-size: 1.75rem;
+  }
+}

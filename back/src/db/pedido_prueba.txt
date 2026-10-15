@@ -1,0 +1,5 @@
+begin;
+INSERT INTO pedido (fecha, total, status, usuario_id)VALUES (NOW(), 95.00, 'CONFIRMADO', 4)
+RETURNING id;
+INSERT INTO detalle_pedido (pedido_id, producto_id, cantidad, precio)VALUES (1, 1, 10, 45.00),  (1, 2, 9, 50.00);  
+COMMIT;

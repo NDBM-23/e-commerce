@@ -2,7 +2,7 @@
 import OrderCard from "../components/OrderCard.astro";
 import Layout from "../layouts/Layout.astro";
 import { getOrders } from "../services/graphql";
-
+import '../styles/history.css'
 let orders = null;
 
 try {
@@ -16,8 +16,11 @@ try {
 ---
 
 <Layout title="Pedidos | Ceti-Verso">
-    <main>
-        <h1>Mis pedidos</h1>
+    <main class="orders-container">
+        <header class="orders-header">
+            <h1>Mis pedidos</h1>
+            <p class="orders-subtitle">Revisa el historial y estado de tus compras</p>
+        </header>
         {
             orders && orders.length > 0 ? (
                 <section>
@@ -26,7 +29,10 @@ try {
                     ))}
                 </section>
             ) : (
-                <p>No tienes pedidos registrados.</p>
+                <div class="empty-orders">
+                    <p class="empty-title">Aún no tienes pedidos registrados</p>
+                    <p class="empty-text">Explora la tienda y realiza tu primera compra.</p>
+                </div>
             )
         }
     </main>

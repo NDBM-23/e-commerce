@@ -1,14 +1,13 @@
-
 html, body {
   margin: 0;
   padding: 0;
-  background-color: #1a1a1a;
+  background-color: #292828;
   width: 100%;
   overflow-x: hidden;
 }
 .admin-page {
   height: 100vh;
-  background-color: #1a1a1a;
+  background-color: #292828;
   color: #f3f3f3;
   padding: 1rem 1.5rem; 
   font-family: system-ui, -apple-system, sans-serif;
@@ -24,7 +23,7 @@ html, body {
   justify-content: space-between;
   align-items: center;
   margin-bottom: 1rem;
-  border-bottom: 2px solid #2d2d2d;
+  border-bottom: 2px solid #b1a3a3;
   padding-bottom: 0.75rem;
 }
 
@@ -44,7 +43,7 @@ html, body {
 
 .admin-header__back {
   color: #ffffff;
-  background-color: #2d2d2d;
+  background-color: #0062FF;
   padding: 0.6rem 1.2rem;
   border-radius: 6px;
   text-decoration: none;
@@ -53,7 +52,7 @@ html, body {
 }
 
 .admin-header__back:hover {
-  background-color: #3d3d3d;
+  background-color: #F47F26;
 }
 
 .admin-error {
@@ -94,8 +93,8 @@ html, body {
 }
 
 .admin-card {
-  background-color: #242424;
-  border: 1px solid #2d2d2d;
+  background-color: #34333447;
+  border: 2px solid #fffefe8a;
   border-radius: 12px;
   padding: 1.5rem;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
@@ -110,7 +109,7 @@ html, body {
   font-size: 1.1rem;
   font-weight: 700;
   text-transform: uppercase;
-  color: #ff7a18; 
+  color: #F47F26; 
   margin-bottom: 1rem;
   letter-spacing: 0.05em;
 }
@@ -139,7 +138,7 @@ html, body {
 .admin-form__field input,
 .admin-form__field select {
   background-color: #1a1a1a;
-  border: 1px solid #3d3d3d;
+  border: 1px solid #333333;
   border-radius: 6px;
   padding: 0.55rem 0.75rem;
   color: #ffffff;
@@ -150,7 +149,7 @@ html, body {
 
 .admin-form__field input:focus,
 .admin-form__field select:focus {
-  border-color: #ff7a18;
+  border-color: #F47F26;
 }
 
 .admin-form__actions {
@@ -162,7 +161,7 @@ html, body {
 .admin-form__submit {
   flex: 1;
   margin-top: 30px;
-  background-color: #ff7a18; 
+  background-color: #F47F26; 
   color: #ffffff;
   border: none;
   border-radius: 6px;
@@ -175,7 +174,7 @@ html, body {
 }
 
 .admin-form__submit:hover {
-  background-color: #2563eb;
+  background-color: #0062FF;
 }
 
 .admin-form__cancel {
@@ -209,13 +208,13 @@ html, body {
   font-size: 0.85rem;
   text-transform: uppercase;
   padding: 0.9rem;
-  border-bottom: 2px solid #374151;
+  border-bottom: 2px solid #333333;
   letter-spacing: 0.05em;
 }
 
 .admin-table td {
   padding: 1rem 0.9rem;
-  border-bottom: 1px solid #2d2d2d;
+  border-bottom: 1px solid #333333;
   color: #e5e7eb;
 }
 .admin-table-container {
@@ -232,12 +231,12 @@ html, body {
 }
 
 .admin-table td:nth-child(3) {
-  color: #22c55e;
+  color: #6fff00;
   font-weight: 700;
 }
 
 .admin-table td:nth-child(4) {
-  color: #22c55e;
+  color: #6fff00;
   font-weight: 700;
 }
 
@@ -247,7 +246,7 @@ html, body {
 }
 
 .btn-edit {
-  background-color: #2563eb;
+  background-color: #F47F26;
   color: white;
   border: none;
   padding: 0.4rem 0.8rem;
@@ -259,7 +258,7 @@ html, body {
 }
 
 .btn-edit:hover {
-  background-color: #1d4ed8;
+  background-color: #0052d4;
 }
 
 .btn-delete {

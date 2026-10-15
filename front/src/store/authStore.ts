@@ -4,6 +4,7 @@ export type AuthUser = {
   id: number
   nombre: string
   email: string
+  rol: string
 }
 
 type AuthStore = {

@@ -129,7 +129,6 @@ export default function AdminDashboard({ initialUser }: { initialUser: any }) {
       <header className="admin-header">
         <div>
           <h2 id='title' >Panel de Administrador</h2>
-          <p>Bienvenido, {initialUser.email}</p>
         </div>
         <a href="/" className="admin-header__back">Volver a la tienda </a>
       </header>

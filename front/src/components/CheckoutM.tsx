@@ -36,6 +36,24 @@ export default function CheckoutComponentM({ publicKey }: Props) {
 
     const [paymentError, setPaymentError] = useState<string | null>(null);
 
+
+    useEffect(() => {
+        const verifyAuth = async () => {
+            try {
+                const res = await fetch(`${API_URL}/auth/me`, {
+                    credentials: "include",
+                });
+                if (!res.ok) {
+                    window.location.href = "/login?redirect=/checkout";
+                }
+            } catch (err) {
+                window.location.href = "/login?redirect=/checkout";
+            }
+        };
+
+        verifyAuth();
+    }, []);
+
     useEffect(() => {
         idempotencyKeyRef.current = crypto.randomUUID();
         isSubmittingRef.current = false;
@@ -291,4 +309,3 @@ export default function CheckoutComponentM({ publicKey }: Props) {
         </>
     );
 }
-

@@ -10,6 +10,7 @@ const response = await fetch(`${API_URL}/auth/me`, {
 if (!response || !response.ok) {
   return Astro.redirect('/login');
 }
+
 const user = await response.json();
 if (user.rol !== 'ADMIN') {
   return Astro.redirect('/');

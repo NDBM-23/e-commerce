@@ -1,14 +1,16 @@
 ---
 import AdminDashboard from '../../components/AdminDashboard';
+import { API_URL } from '../../config';
 const cookieHeader = Astro.request.headers.get('cookie') || '';
-const response = await fetch('http://localhost:4000/auth/me', {
+const response = await fetch(`${API_URL}/auth/me`,{
   headers: {
     cookie: cookieHeader, 
   },
-});
-if (!response.ok) {
+}).catch(() => null);
+if (!response || !response.ok) {
   return Astro.redirect('/login');
 }
+
 const user = await response.json();
 if (user.rol !== 'ADMIN') {
   return Astro.redirect('/');
